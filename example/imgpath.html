@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+	<script type="text/javascript" src="../lib/d3.js"></script>
+	<script type="text/javascript" src="../lib/jquery.js"></script>
+	<script type="text/javascript" src='../light/innerlight.js'></script>
+	<script type="text/javascript" src="../light/gradientgenerator.js"></script>
+</head>
+<style>
+	.leftdiv{
+		float: left;
+		width: 70%;
+		height: 100%;
+	}
+	.rightdiv{
+		float: right;
+		width: 30%;
+		height: 100%;
+	}
+	#coverdiv{
+		/*background: rgba(255,0,0,0.05);*/
+		position: absolute;
+		top: 0;
+		left: 0;
+		border: solid 1px;
+		/*width: 100%;
+		height: 100%;*/
+	}
+	.dot{
+		fill: green;
+	}
+	#new checked{
+		background: red;
+	}
+</style>
+<body>
+	<div class='leftdiv'>
+		<img src="../img/mindmap.png" style="width: 100%"></img>
+	</div>
+	<div class='rightdiv'>
+		<button id="new" onclick="newDot()">New Line</button>
+		<button id="modify" onclick="modifyDot()">Modify</button>
+		<button id="upload" onclick="uploadDots()">Upload</button>
+	</div>
+	<div id="coverdiv">
+		<svg></svg>
+	</div>
+</body>
+<script type="text/javascript">
+	var maxHeight = -1;
+	var minHeight = 10000;
+	function getBarRects(){
+		rectStr = "41,282,15,137,57,263,14,156,73,277,14,142,87,251,15,168,102,282,14,137,117,261,14,157,132,193,17,224,150,336,13,81,165,312,13,105,179,317,15,100,196,313,14,102,210,306,14,111,223,315,17,103,238,266,17,151,255,314,14,104,270,290,15,129,284,239,17,178,300,282,16,135,317,286,15,129,332,266,15,149,348,320,13,96,361,295,14,118,375,278,16,135,392,306,14,107,408,336,14,75,422,289,14,120,437,251,17,156,455,327,15,77,470,319,16,81,485,273,16,122,502,317,13,76,516,332,14,59,530,294,16,98,546,345,14,46,561,323,14,67,576,338,14,51,590,334,17,53,606,324,16,61,622,307,16,76,638,324,14,55,652,283,17,91,666,263,16,107,682,275,15,89,696,265,15,88,712,285,16,63,727,262,16,75,741,155,15,179,758,144,13,185";
+		liStr = rectStr.split(',');
+		var liRect = [];
+		for(var i = 0; i < liStr.length/4; i ++){
+			var rect = {
+				x: +(liStr[i * 4]),
+				y: +(liStr[i * 4 + 1]),
+				width: +(liStr[i * 4 + 2]),
+				height: +(liStr[i * 4 + 3])
+			}
+			// console.log(' height ', rect.height);
+			if(maxHeight < rect.height){
+				// console.log(' 1 ')
+				maxHeight = rect.height;
+			}
+			if(minHeight > rect.height){
+				// console.log(' 2')
+				minHeight = rect.height;
+			}
+			liRect.push(rect);
+		}
+		return liRect;
+	}
+	function getBarRects2(){
+		point12str = "41,279,56,419,56,262,71,419,72,275,87,419,86,250,102,419,101,278,116,419,116,259,131,418,132,193,149,417,148,334,163,417,163,308,178,417,179,312,194,417,195,309,210,415,209,303,224,417,223,310,240,418,238,266,255,417,254,311,269,418,268,288,285,419,283,238,301,417,300,282,316,417,317,286,332,415,331,263,347,415,347,317,361,416,360,293,375,413,375,278,391,413,392,306,406,413,406,334,422,411,421,285,436,409,436,248,454,407,453,325,470,404,468,316,486,400,485,273,501,395,500,315,515,393,514,332,530,391,529,292,546,392,545,344,560,391,561,322,575,390,576,338,590,389,590,334,607,387,606,324,622,385,622,307,638,383,638,324,652,379,652,281,669,374,666,263,682,370,682,275,697,364,696,265,711,353,712,285,728,348,726,261,743,337,741,155,756,334,758,144,771,329"
+		//"41,282,56,419,57,263,71,419,73,277,87,419,87,251,102,419,102,282,116,419,116,259,131,418,132,193,149,417,150,336,163,417,165,312,178,417,179,317,194,417,196,313,210,415,210,306,224,417,223,315,240,418,238,266,255,417,255,314,269,418,270,290,285,419,284,239,301,417,300,282,316,417,317,286,332,415,332,266,347,415,348,320,361,416,361,295,375,413,375,278,391,413,392,306,406,413,408,336,422,411,422,289,436,409,437,251,454,407,455,327,470,404,470,319,486,400,485,273,501,395,502,317,515,393,516,332,530,391,530,294,546,392,546,345,560,391,561,323,575,390,576,338,590,389,590,334,607,387,606,324,622,385,622,307,638,383,638,324,652,379,652,283,669,374,666,263,682,370,682,275,697,364,696,265,711,353,712,285,728,348,727,262,743,337,741,155,756,334,758,144,771,329"
+		liStr = point12str.split(',');
+		var liRect = [];
+		for(var i = 0; i < liStr.length/4; i ++){
+			var rect = {
+				x: +(liStr[i * 4]),
+				y: +(liStr[i * 4 + 1]),
+				width: +(liStr[i * 4 + 2]) - (+(liStr[i * 4])),
+				height: +(liStr[i * 4 + 3]) - +(liStr[i * 4 + 1]),
+			}
+			// console.log(' height ', rect.height);
+			if(maxHeight < rect.height){
+				// console.log(' 1 ')
+				maxHeight = rect.height;
+			}
+			if(minHeight > rect.height){
+				// console.log(' 2')
+				minHeight = rect.height;
+			}
+			liRect.push(rect);
+		}
+		return liRect;
+	}
+	function getBarRects3(liPoint12){
+		var liRect = [];
+		for(var i = 0; i < liPoint12.length/2; i ++){
+			var rect = {
+				x: +(liPoint12[i * 2][0]),
+				y: +(liPoint12[i * 2][1]),
+				width: +(liPoint12[i * 2 + 1][0]) - (+(liPoint12[i * 2][0])),
+				height: +(liPoint12[i * 2 + 1][1]) - +(liPoint12[i * 2][1]),
+			}
+			// console.log(' height ', rect.height);
+			if(maxHeight < rect.height){
+				// console.log(' 1 ')
+				maxHeight = rect.height;
+			}
+			if(minHeight > rect.height){
+				// console.log(' 2')
+				minHeight = rect.height;
+			}
+			liRect.push(rect);
+		}
+		return liRect;
+	}
+</script>
+
+<script type="text/javascript">
+	
+	//mindmap
+	function getPaths(liDots){
+		var path1 = [];
+		for(var i = 0; i < liDots.length; i ++){
+			path1.push([+(liDots[i][0]),
+				+(liDots[i][1])]);
+		}
+		return [path1];
+	}
+	function drawMAPaths(liPaths){
+
+		var line = d3.line();
+
+		d3.select('svg')
+			.selectAll('.ma_path')
+			.data(liPaths)
+			.enter()
+			.append('path')
+			.attr('class', 'ma_path')
+			.attr('d', function(d){
+				console.log('line ', d);
+				return line(d)
+			})
+			.style('fill', 'none')
+			.style('stroke', '#000')
+			.style('stroke-width', '3px')
+			.style('stroke-dasharray', '10 10');	
+
+		var liMAPath = d3.selectAll('.ma_path');
+
+		console.log(' ')
+
+		var loopindex = 19
+		var offset = loopindex;
+
+		var offsetMe = function() {
+
+			console.log(" offset ", offset);
+		  	if(offset < 0) offset = loopindex;
+			liMAPath.each(function(){
+				d3.select(this).style('stroke-dashoffset', offset);
+			})		 
+		 	offset--;	  
+		}
+
+		setInterval(function(){
+			offsetMe();
+		}, 100);
+
+	}
+</script>
+
+<script type="text/javascript">
+
+	function drawLightRects(liRectData){
+
+		d3.selectAll('.wageBar').remove();
+		d3.selectAll('.lighting').remove();
+
+		d3.select('svg').selectAll('.wageBar')
+		  .data(liRectData)
+		  .enter()
+		  .append('rect')
+		  .attr('class', 'wageBar')
+		  .attr('level', function(d){
+		  	console.log(" add wagebar ");
+		  	return (Math.floor((+d.height)/30)%10);
+		  })
+		  .attr('x', function(d){
+		  	// console.log(' x ', d.x);
+		  	return +d.x
+		  })
+		  .attr('y', function(d){
+		  	return +d.y
+		  })
+		  .attr('width', function(d){
+		  	return +d.width
+		  })
+		  .attr('height', function(d){
+		  	return +d.height/3
+		  })	  
+		  .style('fill', 'none');
+
+		var gradientGenerator = new GradientGenerator();
+		var liSingleLightIds = [];
+		for(var i = 2; i < 12; i ++){
+			var liSingleLightId = gradientGenerator.getSingleWhiteLights(i);
+			liSingleLightIds.push(liSingleLightId);
+		}
+
+		var lightDomManager = [];
+		d3.selectAll('.wageBar')
+		  .each(function(d){
+		  	console.log(' lighting ');
+		  	var liSingleLightId = liSingleLightIds[+d3.select(this).attr("level")]
+		  	lightRect = new AnimatedInnerLightDom(d3.select(this), liSingleLightId, 0, 1);
+		  	lightDomManager.push(lightRect);
+		  })
+
+		var timeIndex = 0;
+		var loopTimeIndex = 12;
+		setInterval(function(){
+			for(var i = 0; i < lightDomManager.length; i ++){
+				var lightDom = lightDomManager[i]
+				lightDom.animatebyTimeIndex(timeIndex);
+			}
+			if(timeIndex > loopTimeIndex)
+				timeIndex = 0
+			else
+				timeIndex += 1;
+		}, 500);
+	}
+</script>
+
+<script type="text/javascript">
+
+	var nextId = 0
+	function getNextId(){
+		return nextId ++;
+	}
+
+	var imgWidth = $('img')[0].getBoundingClientRect().width;
+	var imgHeight = $('img')[0].getBoundingClientRect().height;
+	d3.select('svg')
+	.attr('width', imgWidth)
+	.attr('height', imgHeight);
+
+	// //inter
+	var currentSelectId = null;
+	var currentHoverId = null;
+
+	// var liRectData = getBarRects2();
+	var liDrawDots = [];
+	// for (var i = 0; i < liRectData.length; i ++) {
+	// 	liDrawDots.push([liRectData[i].x, liRectData[i].y])
+	// 	liDrawDots.push([liRectData[i].x + liRectData[i].width, liRectData[i].y + liRectData[i].height])
+	// };
+
+	var svg = d3.select('svg');
+
+	svg.selectAll('.dot')
+	.data(liDrawDots)
+	.enter()
+	.append('circle')
+	.attr('id', function(){
+		return 'dot-' + getNextId(); 
+	})
+	.attr('class', 'dot')
+	.attr('r', '3px')
+  	.attr('cx', function(d){
+  		return d[0]
+  	})
+  	.attr('cy', function(d){
+  		return d[1]
+  	})		  	
+	.on('mouseenter', function(){
+		if(funcType == 'modify'){
+			d3.select(this)
+	  	.style('fill', 'red');
+	  	currentHoverId = d3.select(this).attr('id')
+	  	console.log(' mouse enter !', currentHoverId);
+	  }
+	})
+	.on('mouseleave', function(){
+		console.log(' mouse leave !');
+		d3.select(this)
+		.style('fill', 'green');
+	});		
+
+	//[1]
+	// drawLightRects(liRectData);
+
+	//[2]
+	// var liPathData = [];
+	// drawMAPaths(liPathData);
+	
+
+	// function getRect(lefttop, rightbottom){
+	// 	var rect = {
+	// 		'x': lefttop[0],
+	// 		'y': lefttop[1],
+	// 		'width': rightbottom[0] - lefttop[0],
+	// 		'height': rightbottom[1] - lefttop[1],
+	// 	}
+	// 	return rect;
+	// }
+
+
+	// index = 0;
+	// var lefttop, rightbottom;
+	// liRect = [];
+
+	var funcType = 'modify';
+
+	function newDot(){
+		console.log('new')
+		funcType = 'new';
+
+		// d3.select('#new')
+		// .attr('checked', function(){
+		// 	return !d3.select(this).attr('checked')
+		// });
+	}
+	function modifyDot(){
+		console.log('modify')
+		funcType = 'modify';
+	}
+
+	var liPoint = [];
+
+	function uploadDots(){
+		console.log('upload')
+		funcType = 'upload';
+		var liResultPoint = [];
+		d3.selectAll('.dot')
+			.each(function(){
+				liResultPoint.push([+d3.select(this).attr('cx'), +d3.select(this).attr('cy')]);
+				console.log(d3.select(this).attr('id'), 'here ', +d3.select(this).attr('cx'), +d3.select(this).attr('cy'));
+			})
+
+		//[1]
+		// var liBarRect = getBarRects3(liResultPoint);
+		// drawLightRects(liBarRect);
+		//[2]
+		var liPath = getPaths(liResultPoint);
+		drawMAPaths(liPath);
+		console.log(' point ! ', liResultPoint);
+		funcType = 'modify'
+	}
+
+
+	d3.select('svg')
+	  .on('mousedown', function(){
+	  	
+	  	var coords = d3.mouse(this);
+
+	  	if(funcType == 'new'){
+
+		  	currentSelectId = 'dot-' + getNextId(); 
+
+  			d3.select(this)
+		  	.append('circle')
+		  	.attr('class', 'dot')
+		  	.attr('id', function(){
+		  		return currentSelectId;
+		  	})
+		  	.attr('r', '5px')
+		  	.attr('cx', coords[0])
+		  	.attr('cy', coords[1])		  	
+			  .on('mouseenter', function(){
+			  	if(funcType == 'modify'){
+		  			d3.select(this)
+				  	.style('fill', 'red');
+				  	currentHoverId = d3.select(this).attr('id')
+				  	console.log(' mouse enter !', currentHoverId);
+				  }
+			  })
+			  .on('mouseleave', function(){
+			  	console.log(' mouse leave !');
+			  	d3.select(this)
+			  	.style('fill', 'green');
+			  });		
+	  	}else{
+	  		currentSelectId = currentHoverId;
+	  	}
+	  })
+	  .on('mousemove', function(){
+	  	if(funcType == 'modify' && currentSelectId != null){
+	  		var coords = d3.mouse(this);
+	  		d3.select('#' + currentSelectId)
+	  		.attr('cx', coords[0])
+	  		.attr('cy', coords[1]);
+	  	}
+	  })
+	  .on('mouseup', function(){
+	  	if(funcType == 'new' || funcType == 'modify'){
+	  		liPoint[currentSelectId] = [+d3.select('#' + currentSelectId).attr('cx'), +d3.select('#' + currentSelectId).attr('cy')];
+	  		currentSelectId = null;
+	  	}
+	  });
+	  
+</script>

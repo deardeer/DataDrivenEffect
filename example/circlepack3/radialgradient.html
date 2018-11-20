@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<title>Radial Gradient"</title>
+<body>
+<script src="./d3.js"></script>
+<script type="text/javascript" src="./comm/radialgradient.js"></script>
+<script>
+
+var w = 500, h = 500,
+    r = Math.min(w, h) / 4;
+
+var svg = d3.select("body").append("svg")
+    .attr("width", w)
+    .attr("height", h)
+var g1 = svg
+  .append("g")
+    .attr("transform", "translate(" + w/4 + "," + h/2 + ")");
+
+//outward
+var defs = svg.append('defs');
+
+var liInColor = [
+    {
+        'offset': '0%',
+        'stop-color': 'rgba(255,255,255, 1.0)'
+    },
+    {
+        'offset': '80%',
+        'stop-color': 'rgba(0, 0, 0, 1.)'
+    },
+]
+
+setRadialGradient(defs, 'radial-gradient-inn', liInColor)
+
+var liOutColor = [
+    {
+        'offset': '40%',
+        'stop-color': "rgba(0, 0 , 0, 0.0)" 
+    },
+    {
+        'offset': '100%',
+        'stop-color': "rgba(255,255,255, 1.0)"
+    }
+]
+setRadialGradient(defs, 'radial-gradient-out', liOutColor)
+
+
+g1.append("circle")
+    .attr("cx", 0)
+    .attr("cy", 0)
+    .attr("r", r)
+    .style("fill", "black");
+
+g1.append("circle")
+    .attr("cx", 0)
+    .attr("cy", 0)
+    .attr("r", r)
+    .style("fill", "url(#radial-gradient-out)");
+
+
+//inneraward
+
+var svg = d3.select("body").append("svg")
+    .attr("width", w)
+    .attr("height", h)
+
+var g2 = svg
+  .append("g")
+    .attr("transform", "translate(" + w*3/4 + "," + h/2 + ")");
+
+g2.append("circle")
+    .attr("cx", 0)
+    .attr("cy", 0)
+    .attr("r", r)
+    .style("fill", "black");
+
+g2.append("circle")
+    .attr("cx", 0)
+    .attr("cy", 0)
+    .attr("r", r)
+    .style("fill", "url(#radial-gradient-inn)");
+
+
+</script>

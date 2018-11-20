@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+	<script type="text/javascript" src="../lib/d3.js"></script>
+	<script type="text/javascript" src="../lib/jquery.js"></script>
+	<script type="text/javascript" src='../light/innerlight.js'></script>
+	<script type="text/javascript" src="../lib/EventEmitter.js"></script>
+	<script type="text/javascript" src="../light/gradientgenerator.js"></script>
+</head>
+<style>
+	.leftdiv{
+		float: left;
+		width: 50%;
+		height: 100%;
+	}
+	.rightdiv{
+		float: right;
+		width: 30%;
+		height: 100%;
+	}
+	#coverdiv{
+		/*background: rgba(255,0,0,0.05);*/
+		position: absolute;
+		top: 0;
+		left: 0;
+		border: solid 1px;
+		/*width: 100%;
+		height: 100%;*/
+	}
+	.dot{
+		fill: green;
+	}
+	#new checked{
+		background: red;
+	}
+</style>
+<body>
+	<div class='leftdiv'>
+		<img src="../img/Minard1858World.jpg" style="width: 100%"></img>
+	</div>
+	<div class='rightdiv'>
+	</div>
+	<div id="coverdiv">
+		<svg></svg>
+	</div>
+</body>
+
+<script type="text/javascript">
+	function initPathLights(){
+		var liPathLights = [];
+		liPathLights.push({
+			path: [[274,24],[246,29],[218,45],[194,70],[172,82],[156,92],[143,92],[133,105],[171,97],[152,114],[133,126],[134,137],[130,151],[195,101],[250,59],[234,74],[224,98],[237,202],[243,262],[245,277],[295,402],[315,424],[349,439],[375,441],[587,442],[604,436],[614,424],[618,410],[618,400],[598,405],[590,416],[562,419],[370,419],[351,416],[332,407],[316,396],[269,285],[262,269],[261,249],[248,119],[247,99],[257,80],[276,68],[274,24]],
+			light: 'singlelinearT2B',
+		},
+		{
+			path:[[130,147],[143,147],[158,138],[226,103],[250,93],[261,91],[273,88],[286,87],[297,79],[306,65],[323,58],[339,51],[356,52],[356,65],[348,72],[342,80],[331,83],[321,94],[307,106],[295,113],[276,117],[260,119],[219,139],[207,146],[189,154],[171,165],[151,168],[135,173],[129,165],[130,147]],
+			light: 'singlelinearL2R',
+		},
+		{
+			path: [[336,315],[324,315],[307,316],[295,316],[257,316],[242,316],[242,309],[260,309],[284,309],[303,306],[324,310],[336,309],[336,315]],
+			light: 'singlelinearR2L',
+		},
+		{
+			path: [[337,315],[325,320],[314,332],[310,345],[310,359],[314,375],[320,387],[327,399],[336,408],[347,415],[359,416],[378,414],[391,408],[404,398],[448,366],[456,356],[463,340],[454,335],[452,346],[445,357],[396,392],[439,352],[431,344],[379,388],[370,394],[359,394],[348,387],[341,378],[336,370],[334,356],[334,344],[342,336],[344,322],[337,315]],
+			light: 'singlelinearL2R',
+		},
+		{
+			path: [[462,324],[473,319],[485,310],[493,301],[503,289],[501,281],[501,271],[509,281],[515,275],[519,263],[526,251],[531,258],[526,272],[517,284],[510,295],[504,304],[494,312],[484,322],[470,332],[462,324]],
+			light: 'singlelinearB2T',
+		},
+		{
+			path: [
+			[530,258],[509,322],[489,380],[480,403],[472,417],[464,426],[451,436],[439,441],[426,445],[347,444],[345,450],[426,450],[443,446],[455,440],[466,433],[476,421],[486,404],[497,382],[516,322],[537,262],[530,258]
+			],
+			light: 'singlelinearT2B',
+		},
+		{
+			path:[[587,254],[592,273],[596,290],[595,304],[590,315],[586,324],[577,336],[585,341],[593,328],[600,316],[603,298],[599,279],[597,262],[594,250],[587,254]],
+			light: 'singlelinearT2B',
+		},
+		{
+			path: [[584,253],[557,330],[562,332],[590,256],[584,253]],
+			light: 'singlelinearT2B'
+		},
+		{
+			path: [[600,245],[606,249],[611,243],[616,232],[619,222],[620,212],[624,217],[623,228],[619,240],[613,249],[606,254],[593,250],[600,245]],
+			light: 'singlelinearB2T',
+		},
+		{
+			path: [[221,319],[227,318],[219,218],[229,215],[236,311],[236,317],[232,322],[223,327],[221,319]],
+			light: 'singlelinearB2T'
+		}
+		);
+
+		return liPathLights;
+	}
+</script>
+
+<script type="text/javascript">
+
+	var liPathLights = initPathLights();
+	console.log(' path # = ', liPathLights.length);
+
+	var imgWidth = $('img')[0].getBoundingClientRect().width;
+	var imgHeight = $('img')[0].getBoundingClientRect().height;
+	console.log(' img w, h ', $('img')[0].getBoundingClientRect(), imgWidth, imgHeight);
+	var _svg = d3.select('svg')
+	.attr('width', imgWidth)
+	.attr('height', imgHeight);
+
+	var line = d3.line();
+	_svg.selectAll('ghost')
+		.data(liPathLights)
+		.enter()
+		.append('path')
+		.attr('class', 'ghost')
+		.attr('d', function(d){
+			return line(d.path)
+		})
+		.style('fill', 'none');
+
+	var gradientGenerator = new GradientGenerator();
+
+	var lightness = 0.35;
+	var lightMap = {
+			singlelinearT2B: gradientGenerator.getSingleAlphaWhiteLights(10, lightness, 0, 100, {x1: 0, x2: 0, y1: 0, y2: 100}),
+			singlelinearB2T: gradientGenerator.getSingleAlphaWhiteLights(10, lightness, 0, 100, {x1: 0, x2: 0, y1: 100, y2: 0}),
+			singlelinearL2R: gradientGenerator.getSingleAlphaWhiteLights(10, lightness, 0, 100, {x1: 0, x2: 100, y1: 0, y2: 0}),
+			singlelinearR2L: gradientGenerator.getSingleAlphaWhiteLights(10, lightness, 0, 100, {x1: 100, x2: 0, y1: 0, y2: 0}),
+			doublelinear: gradientGenerator.getBiWhiteLights(10, 0.5),
+			radial: gradientGenerator.getRadialWhiteLights(10)
+		}
+
+	var lightAdder = {
+		liLightDom: []
+	};
+	_svg.selectAll('.ghost')
+		.each(function(d){
+			var lighting = new AnimatedInnerLightDom(d3.select(this), lightMap[d.light], 0, 1);
+			lightAdder.liLightDom.push(lighting);
+		})
+
+	var timer = {
+		timeIndex: 0,	
+		loopTimeIndex: 10,	
+		'reset': function(){
+			this.timeIndex = 0;
+		},
+		'start': function(){
+			var self = this;
+			setInterval(function(){
+				for(var i = 0; i < lightAdder.liLightDom.length; i ++){
+					var lightDom = lightAdder.liLightDom[i]
+					lightDom.animatebyTimeIndex(self.timeIndex);
+				}
+				if(self.timeIndex > self.loopTimeIndex)
+					self.reset();
+				else
+					self.timeIndex += 1;
+				// console.log(' timer ', self.timeIndex);
+			}, 200);
+		},
+	}
+	timer.start();
+
+</script>

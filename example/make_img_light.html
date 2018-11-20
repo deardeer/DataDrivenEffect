@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+	<script type="text/javascript" src="../lib/d3.js"></script>
+	<script type="text/javascript" src="../lib/jquery.js"></script>
+	<script type="text/javascript" src='../light/innerlight.js'></script>
+	<script type="text/javascript" src="../lib/EventEmitter.js"></script>
+	<script type="text/javascript" src="../light/gradientgenerator.js"></script>
+</head>
+<style>
+	.leftdiv{
+		float: left;
+		width: 50%;
+		height: 100%;
+	}
+	.rightdiv{
+		float: right;
+		width: 30%;
+		height: 100%;
+	}
+	#coverdiv{
+		/*background: rgba(255,0,0,0.05);*/
+		position: absolute;
+		top: 0;
+		left: 0;
+		border: solid 1px;
+		/*width: 100%;
+		height: 100%;*/
+	}
+	.dot{
+		fill: green;
+	}
+	#new checked{
+		background: red;
+	}
+</style>
+<body>
+	<div class='leftdiv'>
+		<img src="../img/Minard1858World.jpg" style="width: 100%"></img>
+	</div>
+	<div class='rightdiv'>
+		<button id="new" onclick="functionHub.setFunc('new')">New</button>
+		<br>
+		<input type='radio' value="singlelinearT2B" name="lighttype" checked>Single T2B Linear </input>
+		<input type='radio' value="singlelinearB2T" name="lighttype" >Single B2T Linear </input>
+		<input type='radio' value="singlelinearL2R" name="lighttype" >Single L2R Linear </input>
+		<input type='radio' value="singlelinearR2L" name="lighttype" >Single R2L Linear </input>
+		<input type='radio' value="doublelinear" name="lighttype">Double Linear </input>
+		<input type='radio' value="radial" name="lighttype">Radial Linear </input>
+		<button id="ok" onclick="functionHub.setFunc('ok')">Add Lighter</button>
+		<br>
+
+		<button id="undo" onclick="functionHub.setFunc('undo')">Undo</button>
+		<button id="modify" onclick="functionHub.setFunc('modify')">Modify</button>
+		<button id="animate" onclick="functionHub.setFunc('animate')">Animate</button>
+		<button id="upload" onclick="functionHub.setFunc('upload')">Upload</button>
+
+	</div>
+	<div id="coverdiv">
+		<svg></svg>
+	</div>
+</body>
+
+<script type="text/javascript">
+	function initPaths(){
+		var liPaths = [];
+		liPaths.push([274,24,246,29,218,45,194,70,172,82,156,92,143,92,133,105,171,97,152,114,133,126,134,137,130,151,195,101,250,59,234,74,224,98,237,202,243,262,245,277,295,402,315,424,349,439,375,441,587,442,604,436,614,424,618,410,618,400,598,405,590,416,562,419,370,419,351,416,332,407,316,396,269,285,262,269,261,249,248,119,247,99,257,80,276,68,274,24]);
+		return liPaths;
+	}
+
+</script>
+
+<script type="text/javascript">	
+	
+	
+	//cover
+	var imgWidth = $('img')[0].getBoundingClientRect().width;
+	var imgHeight = $('img')[0].getBoundingClientRect().height;
+	console.log(' img w, h ', $('img')[0].getBoundingClientRect(), imgWidth, imgHeight);
+	var _svg = d3.select('svg')
+	.attr('width', imgWidth)
+	.attr('height', imgHeight);
+
+	var gradientGenerator = new GradientGenerator();
+
+	var liBiLightId = gradientGenerator.getBiWhiteLights(10, 0.5);
+
+	var singleLightId = gradientGenerator.getSingleWhiteLights(10, 0, 100);
+
+	var functionHub ={
+		type: 'new',
+		setFunc: function(string){
+			this.type = string;
+			console.log(' function hub ', this.type);
+			initFunc();
+		}
+	};
+
+	var pathDefiner = {
+		liPathPos: [],
+		'clearPath': function(){this.liPathPos = []},
+		'beginDefine': function(){
+			var self = this;
+			_svg
+			.on('mousedown', function(){
+				var coords = d3.mouse(this);
+				self.liPathPos.push(coords);
+			    _svg
+			  	.append('circle')
+			  	.attr('class', 'dot')
+			  	.attr('r', '4px')
+			  	.attr('cx', coords[0])
+			  	.attr('cy', coords[1])	
+			});
+		}
+	};
+
+	var lightAdder = {
+		liLightDom: [],
+		lightMap:{
+			singlelinearT2B: gradientGenerator.getSingleWhiteLights(10, 0, 100, {x1: 0, x2: 0, y1: 0, y2: 100}),
+			singlelinearB2T: gradientGenerator.getSingleWhiteLights(10, 0, 100, {x1: 100, x2: 0, y1: 0, y2: 0}),
+			singlelinearL2R: gradientGenerator.getSingleWhiteLights(10, 0, 100, {x1: 0, x2: 100, y1: 0, y2: 0}),
+			singlelinearR2L: gradientGenerator.getSingleWhiteLights(10, 0, 100, {x1: 100, x2: 0, y1: 0, y2: 0}),
+			doublelinear: gradientGenerator.getBiWhiteLights(10, 0.5),
+			radial: gradientGenerator.getRadialWhiteLights(10)
+		},
+		'addLightToDom': function(){
+			//get the light type
+			var lightType = $('input[name="lighttype"]:checked').val();
+			console.log('light type', lightType);
+
+			//create the ghost Dom
+			if(pathDefiner.liPathPos.length == 0)
+				return;
+			var liPathPos = pathDefiner.liPathPos;
+			liPathPos.push(pathDefiner.liPathPos[0]);
+			var line = d3.line(liPathPos);
+			var path = _svg.append('path')
+				.attr('d', line(liPathPos))
+				.attr("stroke", "none")
+				.attr("fill", "none");
+			var biLightRect = new AnimatedInnerLightDom(path, this.lightMap[lightType], 0, 1);
+			this.liLightDom.push(biLightRect);
+		}
+	}
+
+	var timer = {
+		timeIndex: 0,	
+		loopTimeIndex: 10,	
+		'reset': function(){
+			this.timeIndex = 0;
+		},
+		'start': function(){
+			var self = this;
+			setInterval(function(){
+				for(var i = 0; i < lightAdder.liLightDom.length; i ++){
+					var lightDom = lightAdder.liLightDom[i]
+					lightDom.animatebyTimeIndex(self.timeIndex);
+				}
+				if(self.timeIndex > self.loopTimeIndex)
+					self.reset();
+				else
+					self.timeIndex += 1;
+				// console.log(' timer ', self.timeIndex);
+			}, 200);
+		},
+	}
+
+	function initFunc(){
+		switch(functionHub.type){
+			case 'new':
+				pathDefiner.clearPath();
+				pathDefiner.beginDefine();
+				break;
+			case 'ok':
+				lightAdder.addLightToDom();
+				break;
+			case 'animate':
+				timer.start();
+				break;
+			case 'upload': 
+				var liTempPos = pathDefiner.liPathPos;
+				for(var i = 0; i < liTempPos.length; i ++){
+					console.log('here', liTempPos[i][0], liTempPos[i][1]);
+				}
+
+		}
+	}
+
+
+
+	// var eventEmit = new EventEmitter();
+	// eventEmit.on('funchanged', initFunc);
+
+	// function setFunc(string){
+	// 	console.log(string);
+	// 	functionHub.type = string;
+	// 	eventEmit.emit('funchanged');
+	// }
+	// function initFunc(){
+	// 	console.log(' init ', functionHub.type);
+
+	// }
+
+</script>
