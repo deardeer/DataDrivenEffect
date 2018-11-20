@@ -1,5 +1,7 @@
 # DataDrivenEffect
-Source Code for Data-driven Dynamic Effects to Bring Static Charts to Life
--Marching Ants
--Geometric Deformation
--Gradual Appearance
+
+Source Code for Three Data-driven Dynamic Effects
+
+* Marching Ants
+* Geometric Deformation
+* Gradual Appearance
