@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+
+	<script type="text/javascript">
+
+	// function openCity(evt, ant_type){
+
+	//     // Declare all variables
+	//     var i, tabcontent, tablinks;
+
+	//     // Get all elements with class="tabcontent" and hide them
+	//     tabcontent = document.getElementsByClassName("tabcontent");
+	//     for (i = 0; i < tabcontent.length; i++) {
+	//         tabcontent[i].style.display = "none";
+	//     }
+
+	//     // Get all elements with class="tablinks" and remove the class "active"
+	//     tablinks = document.getElementsByClassName("tablinks");
+	//     for (i = 0; i < tablinks.length; i++) {
+	//         tablinks[i].className = tablinks[i].className.replace(" active", "");
+	//     }
+
+	//     // Show the current tab, and add an "active" class to the button that opened the tab
+	//     document.getElementById(ant_type).style.display = "block";
+	//     evt.currentTarget.className += " active";
+	// }
+	</script>
+
+	<style type="text/css">
+		/* The Modal (background) */
+		.modal {
+		    display: none; /* Hidden by default */
+		    position: fixed; /* Stay in place */
+		    z-index: 1; /* Sit on top */
+		    left: 0;
+		    top: 0;
+		    width: 100%; /* Full width */
+		    height: 100%; /* Full height */
+		    overflow: auto; /* Enable scroll if needed */
+		    background-color: rgb(0,0,0); /* Fallback color */
+		    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+		}
+
+		/* Modal Content/Box */
+		.modal-content {
+		    background-color: #fefefe;
+		    margin: 15% auto; /* 15% from the top and centered */
+		    padding: 20px;
+		    border: 1px solid #888;
+		    width: 80%; /* Could be more or less, depending on screen size */
+		}
+
+		/* The Close Button */
+		.close {
+		    color: #aaa;
+		    float: right;
+		    font-size: 28px;
+		    font-weight: bold;
+		}
+
+		.close:hover,
+		.close:focus {
+		    color: black;
+		    text-decoration: none;
+		    cursor: pointer;
+		}
+
+		.tab {
+		    overflow: hidden;
+		    border: 1px solid #ccc;
+		    background-color: #f1f1f1;
+		}
+
+		/* Style the buttons that are used to open the tab content */
+		.tab button {
+		    background-color: inherit;
+		    float: left;
+		    border: none;
+		    outline: none;
+		    cursor: pointer;
+		    padding: 14px 16px;
+		    transition: 0.3s;
+		}
+
+		/* Change background color of buttons on hover */
+		.tab button:hover {
+		    background-color: #ddd;
+		}
+
+		/* Create an active/current tablink class */
+		.tab button.active {
+		    background-color: #ccc;
+		}
+
+		/* Style the tab content */
+		.tabcontent {
+		    display: none;
+		    padding: 6px 12px;
+		    border: 1px solid #ccc;
+		    border-top: none;
+		}
+
+		.buttonPanelDiv {
+		    position: absolute;
+		    background-color:  black;
+		    border: solid 1px black;
+		    width: 100px;
+		    height: 100px;
+		    background: gray;
+		    top: 500px;
+		}
+
+		.box {
+		  font: 10px sans-serif;
+		}
+
+		.box line,
+		.box rect,
+		.box circle {
+		  fill: #fff;
+		  stroke: #000;
+		  stroke-width: 1.5px;
+		}
+
+		.box .center {
+		  stroke-dasharray: 3,3;
+		}
+
+		.box .outlier {
+		  fill: none;
+		  stroke: #ccc;
+		}
+	</style>
+
+    <script src= "{{static_url('./js/comm/draggable.js')}}"></script>
+	<script type="text/javascript" src="{{static_url('./lib/paper-full.js')}}"></script>
+	<script type="text/javascript" src="{{static_url('./lib/d3.js')}}"></script>
+	<script type="text/javascript" src="{{static_url('./lib/lurlquery.js')}}"></script>
+	<script type="text/javascript" src="{{static_url('./lib/jquery.js')}}"></script>
+	<script type="text/javascript" src="{{static_url('./lib/jscolor.min.js')}}"></script
+	<script type="text/javascript" src="{{static_url('./light/innerlight.js')}}"></script>
+	<script type="text/javascript" src="{{static_url('./lib/EventEmitter.js')}}"></script>
+<!-- 
+	<script type="text/javascript" src="{{static_url('./light/gradientgenerator.js')}}"></script>
+	 -->
+	<script type="text/javascript" src="{{static_url('./example/draw/boxplot.js')}}"></script>
+	<script type="text/javascript" src="{{static_url('./example/draw/bubble.js')}}"></script>
+	<script type="text/javascript" src="{{static_url('./example/draw/treemap.js')}}"></script>
+	<script type="text/javascript" src="{{static_url('./example/draw/graph.js')}}"></script>
+	<script type="text/javascript" src="{{static_url('./example/draw/fisheye.js')}}"></script>
+	<script type="text/javascript" src="{{static_url('./example/draw/matrix.js')}}"></script>
+	<script type="text/javascript" src="{{static_url('./example/draw/scatterplot.js')}}"></script>
+	<script type="text/javascript" src="{{static_url('./example/draw/Playfair1821Pric.js')}}"></script>
+
+	<script type="text/javascript" src="{{static_url('./js/geometrydefiner.js')}}"></script>
+	<script type="text/javascript" src="{{static_url('./js/geometrysaver.js')}}"></script>
+	<script type="text/javascript" src="{{static_url('./js/animateeditor.js')}}"></script>
+	<script type="text/javascript" src="{{static_url('./js/animateenhancer.js')}}"></script>
+	<script type="text/javascript" src="{{static_url('./js/animatedommanager.js')}}"></script>
+	<script type="text/javascript" src="{{static_url('./js/functionhub.js')}}"></script>
+</head>
+<style>
+	.leftdiv{
+		float: left;
+		width: 70%;
+		height: 100%;
+	}
+	.rightdiv{
+		float: right;
+		width: 30%;
+		height: 100%;
+	}
+	#coverdiv{
+		/*background: rgba(255,0,0,0.05);*/
+		position: absolute;
+		top: 0;
+		left: 0;
+		border: solid 1px;
+		/*width: 100%;
+		height: 100%;*/
+	}
+	.dot{
+		fill: green;
+	}
+	#new checked{
+		background: red;
+	}
+</style>
+<body>
+	<div class='leftdiv'>		
+		<!-- <img src="{{static_url('./img/Playfair1821Pric.png')}}" style="width: 1200px"></img>		 -->
+		<!-- <img src="{{static_url('./img/ma_ill.png')}}" style="width: 600px"></img> -->
+		<!-- <img src="{{static_url('./img/ma_variety.png')}}" style="width: 600px"></img> -->
+		<!-- <img src="{{static_url('./img/treemap2.png')}}" style="width: 700px"></img> -->
+		<!-- <img src="{{static_url('./img/treemap2.png')}}" style="width: 700px"></img> -->
+		<!-- <img src="{{static_url('./img/draggon_birthday.png')}}" style="width: 800px"></img> -->
+		<img src="{{static_url('./img/white.png')}}" style="width: 600px"></img>
+		<!-- <img src="{{static_url('./img/map.png')}}" style="width: 800px"></img> -->
+		<!-- <img src="{{static_url('./img/bsz.png')}}" style="width: 900px"></img> -->
+		<!-- <img src="{{static_url('./img/circos.png')}}" style="width: 800px"></img> -->
+		
+    <!-- 800px for white -->
+		<!-- 800px for circos -->
+		<!-- 1200px for others -->
+		<!-- 700px for treemap -->
+		<svg style="position: absolute; top: 0; left: 0" id="drawsvg"></svg>
+		<canvas style="position: absolute; top: 0; left: 0" id="aecanvas"></canvas>
+	</div>
+	<div class='rightdiv'>
+		<span> Create Geometry </span>
+		<br>
+		<button id="newline" onclick='functionHub.setFunc({type: "new", para: {"geotype": "polyline"}})'>Create a Polyline</button>
+		<button id="newarea" onclick='functionHub.setFunc({type: "new", para: {"geotype": "area"}})'>Create a Area</button>
+		<button id="newrect" onclick='functionHub.setFunc({type: "new", para: {"geotype": "rect"}})'>Create a Rect</button>
+		<button id="newcircle" onclick='functionHub.setFunc({type: "new", para: {"geotype": "circle"}})'>Create a Circle</button>
+		<button id="newupload" onclick="uploadGeometry()">upload geometry </button>
+		<button id="newadd" onclick='functionHub.setFunc({type: "newadd"})'>Add</button>
+		<button id="upload" onclick="functionHub.setFunc({type: 'upload'})">Print Defined Dots</button>
+
+		<button id="forGraph" onclick="graphAnimate()">Graph Animate</button>
+
+		<button id="stopAnimate" onclick="functionHub.setFunc({type:'stopani'})">Stop Animate</button>
+
+		<br> 
+		<span>Ants</span>
+		<div id="antarea" style="height: 100px; overflow: scroll">
+		</div>
+		<br>
+		<span>Marching Ants</span>
+		<div id="maarea" style="height: 150px; overflow: scroll">
+			<ul id="magroupul"></ul>
+		<!-- 	<ul>Marching Ant 1
+				<button> Path </button>
+				<button> Boundary </button>
+			</ul>
+			<ul>Marching Ant 2
+				<button> Path </button>
+				<button> Boundary </button>
+			</ul> -->
+		</div>
+
+		<input type="text" id="saveMAName"></input>
+		<button id="saveMA" onclick="functionHub.setFunc({type: 'saveDB'})"> Save to DB </button>
+
+		<br>
+		<span> TODO </span>
+		<input type='checkbox' value="geometry" checked>Defined Geometry </input>
+		<input type='checkbox' value="handler" checked>Geometry Handler </input>
+		
+		<br>
+		<br>
+		<br>
+		<br>
+
+		<input type='radio' value="singlelinearT2B" name="lighttype" checked>Single T2B Linear </input>
+		<input type='radio' value="singlelinearB2T" name="lighttype" >Single B2T Linear </input>
+		<input type='radio' value="singlelinearL2R" name="lighttype" >Single L2R Linear </input>
+		<input type='radio' value="singlelinearR2L" name="lighttype" >Single R2L Linear </input>
+		<input type='radio' value="doublelinear" name="lighttype">Double Linear </input>
+		<input type='radio' value="radial" name="lighttype">Radial Linear </input>
+		<button id="ok" onclick="functionHub.setFunc('ok')">Add Lighter</button>
+		<br>
+
+		<button id="undo" onclick="functionHub.setFunc('undo')">Undo</button>
+		<button id="modify" onclick="functionHub.setFunc('modify')">Modify</button>
+		<button id="animate" onclick="functionHub.setFunc('animate')">Animate</button>
+
+	</div>
+
+	<div id="coverdiv">
+
+		<svg id="coversvg">
+		<!-- <rect x="27.357" y="42.193" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="45.793" y="42.193" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="64.229" y="42.193" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="82.665" y="42.193" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="101.101" y="42.193" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="119.537" y="42.193" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="137.973" y="42.193" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="156.408" y="42.193" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="174.844" y="42.193" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="193.28" y="42.193" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="211.715" y="42.193" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="230.151" y="42.193" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="27.357" y="61.462" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="45.793" y="61.462" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="64.229" y="61.462" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="82.665" y="61.462" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="101.101" y="61.462" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="119.537" y="61.462" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="137.973" y="61.462" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="156.408" y="61.462" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="174.844" y="61.462" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="193.28" y="61.462" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="211.715" y="61.462" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="230.151" y="61.462" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="27.357" y="80.731" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="45.793" y="80.731" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="64.229" y="80.731" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="82.665" y="80.731" fill="#E60012" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="101.101" y="80.731" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="119.537" y="80.731" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="137.973" y="80.731" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="156.408" y="80.731" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="174.844" y="80.731" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="193.28" y="80.731" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="211.715" y="80.731" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="230.151" y="80.731" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	<rect x="27.357" y="100" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="45.793" y="100" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	<rect x="64.229" y="100" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="82.665" y="100" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="101.101" y="100" fill="#E60012" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="119.537" y="100" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="137.973" y="100" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="156.408" y="100" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="174.844" y="100" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	<rect x="193.28" y="100" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="211.715" y="100" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	<rect x="230.151" y="100" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="27.357" y="119.268" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="45.793" y="119.268" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="64.229" y="119.268" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="82.665" y="119.268" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="101.101" y="119.268" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="119.537" y="119.268" fill="#E60012" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="137.973" y="119.268" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="156.408" y="119.268" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="174.844" y="119.268" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="193.28" y="119.268" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="211.715" y="119.268" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="230.151" y="119.268" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="27.357" y="138.537" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="45.793" y="138.537" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="64.229" y="138.537" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="82.665" y="138.537" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="101.101" y="138.537" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="119.537" y="138.537" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="137.973" y="138.537" fill="#E60012" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="156.408" y="138.537" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="174.844" y="138.537" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="193.28" y="138.537" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="211.715" y="138.537" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="230.151" y="138.537" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="27.357" y="157.806" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="45.793" y="157.806" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="64.229" y="157.806" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="82.665" y="157.806" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="101.101" y="157.806" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="119.537" y="157.806" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="137.973" y="157.806" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="156.408" y="157.806" fill="#E60012" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="174.844" y="157.806" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="193.28" y="157.806" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="211.715" y="157.806" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="230.151" y="157.806" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="27.357" y="177.074" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="45.793" y="177.074" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="64.229" y="177.074" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="82.665" y="177.074" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="101.101" y="177.074" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="119.537" y="177.074" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="137.973" y="177.074" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="156.408" y="177.074" fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="174.844" y="177.074" fill="#E60012" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="193.28" y="177.074" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="211.715" y="177.074" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="230.151" y="177.074" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="27.357" y="196.343" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="45.793" y="196.343" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="64.229" y="196.343" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="82.665" y="196.343" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="101.101" y="196.343" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="119.537" y="196.343" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="137.973" y="196.343" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="156.408" y="196.343" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="174.844" y="196.343" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="193.28" y="196.343" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="211.715" y="196.343" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="230.151" y="196.343" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="27.357" y="215.612" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="45.793" y="215.612" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="64.229" y="215.612" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="82.665" y="215.612" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="101.101" y="215.612" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="119.537" y="215.612" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="137.973" y="215.612" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="156.408" y="215.612" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="174.844" y="215.612" fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="193.28" y="215.612" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="211.715" y="215.612" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+	
+		<rect x="230.151" y="215.612" fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" width="14.167" height="15"/>
+		 -->
+			<!-- <circle fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" cx="114.519" cy="94.205" r="10.415"/>
+	<circle fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" cx="94.618" cy="69.023" r="10.415"/>
+	<circle fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" cx="59.667" cy="141.333" r="10.415"/>
+	<circle fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" cx="122.519" cy="212.093" r="10.415"/>
+	<circle fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" cx="212.775" cy="168.151" r="10.415"/>
+	<circle fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" cx="190.886" cy="71.023" r="10.415"/>
+	<circle fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" cx="137.734" cy="132.917" r="10.415"/>
+	<circle fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" cx="180.056" cy="154.735" r="10.415"/>
+	<circle fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" cx="170.64" cy="97.205" r="10.415"/>
+	<circle fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" cx="130.113" cy="175.431" r="10.415"/>
+	<circle fill="#00A0E9" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" cx="93.326" cy="140.333" r="10.415"/>
+	<circle fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" cx="72.493" cy="99.873" r="10.415"/>
+	<circle fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" cx="81.911" cy="183.099" r="10.415"/>
+	<circle fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" cx="172.64" cy="196.342" r="10.415"/>
+	<circle fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" cx="211.302" cy="117.269" r="10.415"/>
+	<circle fill="#006934" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" cx="141.734" cy="64.439" r="10.415"/>
+	
+
+	<g class="circleline">
+<line fill="none" stroke="#E60012" stroke-width="1.435" stroke-miterlimit="10" x1="114.519" y1="94.205" x2="137.733" y2="132.917"/>
+	
+		<line fill="none" stroke="#E60012" stroke-width="1.435" stroke-miterlimit="10" x1="137.733" y1="132.917" x2="93.325" y2="140.333"/>
+	
+		<line fill="none" stroke="#E60012" stroke-width="1.435" stroke-miterlimit="10" x1="137.733" y1="132.917" x2="130.112" y2="175.431"/>
+	
+		<line fill="none" stroke="#E60012" stroke-width="1.435" stroke-miterlimit="10" x1="137.733" y1="132.917" x2="180.055" y2="154.735"/>
+	
+		<line fill="none" stroke="#E60012" stroke-width="1.435" stroke-miterlimit="10" x1="137.733" y1="132.917" x2="170.639" y2="97.205"/>
+	
+		<line fill="none" stroke="#E60012" stroke-width="1.435" stroke-miterlimit="10" x1="170.639" y1="97.205" x2="180.055" y2="154.735"/>
+	
+		<line fill="none" stroke="#E60012" stroke-width="1.435" stroke-miterlimit="10" x1="130.112" y1="175.431" x2="175.699" y2="154.338"/>
+	
+		<line fill="none" stroke="#E60012" stroke-width="1.435" stroke-miterlimit="10" x1="93.325" y1="140.333" x2="130.112" y2="175.431"/>
+	
+		<line fill="none" stroke="#E60012" stroke-width="1.435" stroke-miterlimit="10" x1="93.325" y1="140.333" x2="114.519" y2="94.205"/>
+	
+		<line fill="none" stroke="#E60012" stroke-width="1.435" stroke-miterlimit="10" x1="114.519" y1="94.205" x2="170.639" y2="97.205"/>
+	
+		<line fill="none" stroke="#E60012" stroke-width="1.435" stroke-miterlimit="10" x1="93.325" y1="140.333" x2="170.639" y2="97.205"/>
+	
+		<line fill="none" stroke="#E60012" stroke-width="1.435" stroke-miterlimit="10" x1="170.639" y1="97.205" x2="130.112" y2="175.431"/>
+	
+		<line fill="none" stroke="#E60012" stroke-width="1.435" stroke-miterlimit="10" x1="95.739" y1="138.986" x2="180.055" y2="154.735"/>
+	
+		<line fill="none" stroke="#E60012" stroke-width="1.435" stroke-miterlimit="10" x1="114.519" y1="94.205" x2="179.372" y2="154.338"/>
+	
+		<line fill="none" stroke="#E60012" stroke-width="1.435" stroke-miterlimit="10" x1="114.519" y1="94.205" x2="130.112" y2="175.431"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" x1="114.519" y1="94.205" x2="94.617" y2="69.023"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" x1="114.519" y1="94.205" x2="141.733" y2="62.438"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" x1="170.639" y1="97.205" x2="141.733" y2="62.438"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" x1="170.639" y1="97.205" x2="190.886" y2="71.023"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" x1="170.639" y1="97.205" x2="211.301" y2="117.269"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" x1="179.372" y1="154.338" x2="211.301" y2="117.269"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" x1="179.372" y1="154.338" x2="212.775" y2="168.151"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" x1="179.372" y1="154.338" x2="172.639" y2="196.342"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" x1="114.519" y1="94.205" x2="72.492" y2="99.874"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" x1="93.325" y1="138.986" x2="72.495" y2="99.874"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" x1="93.325" y1="138.986" x2="59.667" y2="141.333"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" x1="93.325" y1="138.986" x2="81.91" y2="183.099"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" x1="130.317" y1="174.591" x2="79.908" y2="183.099"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" x1="130.317" y1="174.591" x2="122.519" y2="212.093"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="1.435" stroke-miterlimit="10" x1="172.639" y1="196.342" x2="130.317" y2="174.591"/> -->
+
+	</g>
+
+		</svg>
+	</div>
+
+	<!-- The Modal -->
+	<div id="aeModal" class="modal" style="display: none;">
+	  <!-- Modal content -->
+	  <div class="modal-content" style="background: #ffffff5c">
+	  	
+	    <button id="aecancel">&times;</button>
+	    <button id="aeok">Ok</button>
+
+	     <p> GroupId <input id="groupid" type='text'></input>	</p>	
+
+	     <p> Interval <input id="interval" type='text'></input>	</p>	     
+	     <p> AntColor 
+	     	<input id="antcolor" class="jscolor{ valueElement: 'antcolor'}" value="ab2567"> </p>	     
+		 <p>Ant Gap <input id="manual-antgap" type="text"></input></p>
+	     <br>
+
+	     <p>Ant Type </p> <input type='radio' value="rect" name="anttype" checked>Rect </input> <br>
+			<input type='radio' value="circle" name="anttype" >Circle </input>
+			<input type='radio' value="self-defined" name="anttype" checked>Self Defined </input>
+			<input type='radio' value="other" name="anttype" >Others </input>	    
+	  </div>
+	</div>
+
+	<!-- ToolTip -->
+	<div id="geometryFinish" class='buttonPanelDiv' style='visibility: hidden'>		
+		<span> Type </span> <br>
+			<input type='radio' value="path" name="geometrytype" checked>Path </input> <br>
+			<input type='radio' value="boundary" name="geometrytype" >Boundary </input>
+			<input type='radio' value="ant" name="geometrytype">Ant </input> <br><br>
+		<button onclick="functionHub.setFunc({type: 'addGeometry'})">Ok</button>
+		<button onclick="functionHub._geometryDefiner.clearMode()">Cancel</button>
+	</div>
+</body>
+
+
+</script>
+
+<script type="text/javascript">
+
+	function exampleWithSVG(){
+
+		paper.project.importSVG("{{static_url('./svg/sun.svg')}}", //money2, arrow1
+
+	        	function(item){
+
+	        		//*[1]
+	        		
+		        	// var path1 = [[286, 80],[287, 42]] //right #1: bar chart
+		        	//path 1 [[283,88],[284,25]];
+		        	// var boundary = [[283,42],[290,42],[291,79],[282,78]] 
+		        	
+		        	//*///[1] 
+
+		        	//[2]
+		        	
+		        	var path1 = [[279,240],[287,240],[294,236],[300,231],[303,225],[305,218],[304,208],[299,200],[295,196],[286,190],[275,190],[260,194],[256,209],[256,218],[259,228],[264,235],[271,240],[279,240],[287,240]]//[[281,238.5],[294,235.0836477965032],[303.5166604983954,225.75],[307,213],[303.5166604983954,200.25],[294,190.9163522034968],[281,187.5],[268,190.9163522034968],[258.48333950160463,200.25],[255,213],[258.48333950160463,225.75],[268,235.08364779650316]]
+		        	
+		        	// var pant1 = [[66,65],[71,63],[68,69]]
+		        	// var boundary = [[273,88],[294,89],[293,28],[272,28]]
+		        
+		        	antModal = item._children[1]
+		        	// console.log('antModal', antModal)
+		        	// antModal.fillColor = 'red'
+		        	antModal.visible = false;
+
+		        	//*[2] second one
+		        	/*
+		        	var path1 = [[241,159],[246,150],[249,143],[255,139],[260,136],[265,139],[271,142],[278,144],[282,135],[285,127],[293,123],[301,122],[309,123],[313,130],[316,138],[318,147],[318,151]]//[[100,150],[150, 100],[200,150],[250,100]]
+		        	var boundary = [[237,119],[238,164],[322,158],[319,108]]
+		        	*/
+		        	//*///[2] 
+
+		        	// var boundary = [[239.56462585034012,154.3939393939394],[254.87074829931973,153.3030303030303],[289.5646258503401,155.3030303030303],[310,141],[326,132],[322,106],[278,107],[235,113]]
+		        	//[2]
+
+		        	//[4]
+		   			// var path1 = [[261,344],[269,336],[271,325],[266,319],[273,315],[281,315],[285,308],[287,299],[287,292],[295,290],[301,284],[300,276],[299,271],[312,266]]
+
+		   			// var boundary = [[217,124],[237,161],[323,154],[332,107],[240,104]]
+		   			//[4]
+
+		        	var group = {
+		        		'mainfo': {
+			  					  "ae" : "MA",
+							      "antcolor" : "#fdbb84",// "#f6af29",//""#bfd50f",//
+							      "antshape" : "self-defined",
+							      "antgap" : 8,//8,
+							      'groupid': 'semantic-mountain',
+							      "antinterval" : 6
+			  				},
+			  				'malist': [
+			  					{
+			  						'path': {
+			  							'dots': path1
+			  						},
+			  						// 'boundary': {
+			  						// 	'dots': boundary
+			  						// }
+			  					},
+			  					// {
+			  					// 	'path': {
+			  					// 		'dots': path2
+			  					// 	},
+			  					// 	'boundary': {
+			  					// 		'dots': boundary
+			  					// 	}
+			  					// }
+			  				]
+			  			}			  			
+	        		functionHub.addMAbyGroupwithExampleAnt(
+	        			group, antModal);
+
+					functionHub.setFunc({type: 'animate'})
+		        	})
+    }
+</script>
+
+<script type="text/javascript">
+	function Playfair1821Pric(){
+	 	console.log(' Playfair1821Pric ');
+	 	paper.project.importSVG("{{static_url('./svg/money.svg')}}", 
+	        	function(item){
+		        	// console.log('svg ', item._children[1], functionHub);
+		        	antModal = item._children[1]
+		        	antModal.fillColor = 'red'
+		        	// antModal.position = new Point([100, 500])
+		        	antModal.visible = false;
+		        	var liPath = getPlayfairPaths();
+		        	var edge = 20
+		            // console.log(' lipath length ', liPath.length);
+		            var liRatio = []
+		            var minRatio = 0.08734939759036145, maxRatio = 0.5789473684210527;
+		            var middleRatio = 0.2
+		        	for(var i = 0; i < liPath.length; i ++){
+		        		var path = liPath[i];
+		        		var boundary = [];
+		        		//get path and boundary
+		        		// console.log(' ant interval ', (600 - path[0][1])/(600 - path[1][1]))
+		        		var ratio = (592 - path[0][1])/(592 - path[1][1])
+	        			var normalRatio = 10 - Math.ceil(10 * (ratio - minRatio)/(maxRatio - minRatio))
+		        		if(ratio < 0.2)
+		        			normalRatio = 40 - Math.ceil(40 * (ratio - minRatio)/(maxRatio - minRatio))
+		        		liRatio.push(normalRatio);
+		        		// console.log(' i = ', i, ratio, 20 - Math.floor(20 * ratio))
+
+			  			var group1 = {
+			  				'mainfo': {
+			  					  "ae" : "MA",
+							      "antcolor" : "#006738",
+							      "antshape" : "self-defined",
+							      "antgap" : 60,
+							      'groupid': i,
+							      // 'antinterval': 10 * (600 - path[0][1])/(600 - path[1][1]),
+							      "antinterval" : normalRatio// 15 - Math.floor(20 * (592 - path[0][1])/(path[0][1] - path[1][1]) ),
+			  				},
+			  				'malist': [
+			  					{
+			  						'path': {
+			  							'dots': path
+			  						},
+			  						'boundary':{
+			  							'dots': [[path[0][0] - edge/2., path[0][1]],[path[0][0] + edge/2., path[0][1]],
+			  							[path[1][0] + edge/2., path[1][1]], [path[1][0] - edge/2., path[1][1]], [path[0][0] - edge/2., path[0][1]]]
+			  						}
+			  					}
+			  				]
+			  			}
+		        		functionHub.addMAbyGroupwithExampleAnt(
+		        		group1, antModal);
+		        	}
+
+		        	//print
+		        	// liRatio.sort(function(a, b){return a - b})
+		        	// console.log(' liRatio = ', liRatio);
+
+					functionHub.setFunc({type: 'animate'})
+	        	}
+	        );
+	 }
+</script>
+
+<script type="text/javascript">
+	// function graphMA(){
+	// 	paper.project.importSVG("{{static_url('./svg/graph.svg')}}", 
+	// 		function(item){
+
+	// 		})
+	// }
+</script>
+
+<script type="text/javascript">
+	function uploadGeometry(){
+		switch(example){
+			case 'Playfair1821Pric':				
+				break;
+		}       		
+	}
+</script>
+
+<script type="text/javascript">		
+
+	var example = ""//"treemap"//"boxplot"//"treemap"//"Playfair1821Pric"//"matrix"//"ma_ill2"//"Playfair1821Pric"//"treemap";//matrix"// ""//treemap'//'graph'//'circos2'//'circos'//'boxplot'//'treemap2'//'scatterplot'//"graph"//minard1858world2" //"boxplot"//"Playfair1821Pric"//i_boxplot2//ma_example
+	
+	//cover
+	var imgWidth, imgHeight;
+
+	var largeScreenSizeSetting = {width: 1020, height: 720}
+	var smallScreenSizeSetting = {width: 800, height: 600}
+
+	switch(example){
+		case 'boxplot':
+		case 'graph': 
+		case 'bubble':
+		case 'scatterplot':
+			imgWidth = smallScreenSizeSetting.width
+			imgHeight = smallScreenSizeSetting.height
+			// $('img')[0].src = "{{static_url('./img/white.png')}}";
+			break;
+		default:		
+			imgWidth = $('img')[0].getBoundingClientRect().width + 20;
+			imgHeight = $('img')[0].getBoundingClientRect().height + 20;
+			// console.log(example, "{{static_url('./img/" + example + ".png')}}" );
+			// $('img')[0].src = "{{static_url('./img/" + example + ".png')}}" 
+			break;
+	}
+
+	var _svg = d3.selectAll('svg')
+	.attr('width', imgWidth)
+	.attr('height', imgHeight);
+
+	console.log(' canvas width ', imgWidth, imgHeight);
+
+	var _canvas = d3.select('#aecanvas')
+					.attr('width', imgWidth)
+					.attr('height', imgHeight);
+
+	var canvas = document.getElementById('aecanvas');
+	// Create an empty project and a view for the canvas:
+	paper.setup(canvas);
+	paper.install(window);
+	paper.view.draw();
+
+	var functionHub = new FunctionHub(example);
+
+	switch(example){
+		case 'boxplot': 
+			drawBoxplot();
+			var result = autoBoxplotMA();
+			var antModal = result['antmodal']
+			var allGroupMap = result['groups']
+			var liGroupId = Object.keys(allGroupMap);
+			for(var i = 0; i < liGroupId.length; i ++){
+				var groupId = liGroupId[i];
+				var tempGroup = allGroupMap[groupId];
+				functionHub.addMAbyGroupwithExampleAnt(tempGroup, antModal);
+			}
+			functionHub.setFunc({type: 'animate'})
+			break;
+		case 'matrix':
+			drawMatrix();
+			break;
+		case 'graph':
+			drawGraph();
+			break;
+		case 'scatterplot':
+			drawScatterPlot();
+			break;			
+		case 'treemap':
+			drawTreeMapLight();
+			break;
+		case 'bubble':
+			var svg = d3.select('#drawsvg')
+			drawCircleChart(svg);
+			//GA effect
+
+
+			//MA effect
+			/*
+			var result = autoCircleChartMA();
+			var antModal = result['antmodal']
+			var allGroupMap = result['groups']
+			// console.log(' allGroupMap ', allGroupMap);
+			var liGroupId = Object.keys(allGroupMap)
+			for(var i = 0; i < liGroupId.length; i ++){
+				var groupId = liGroupId[i];
+				var tempGroup = allGroupMap[groupId];
+				functionHub.addMAbyGroupwithExampleAnt(tempGroup, antModal);
+			}
+			functionHub.setFunc({type: 'animate'})
+			*/
+			break;
+		case 'Playfair1821Pric':
+				Playfair1821Pric();
+				break;
+		case 'demo_example':
+		case 'i_boxplot2':
+		case 'ma_example':
+			exampleWithSVG();
+			break;
+		default:
+			break;
+	}
+</script>
+
+<!--
+<script type="text/paperscript" canvas="aecanvas">
+	// Create a Paper.js Path to draw a line into it:
+	var path = new Path();
+	// Give the stroke a color
+	path.strokeColor = 'black';
+	var start = new Point(100, 100);
+	// Move to start and draw a line from there
+	path.moveTo(start);
+	// Note the plus operator on Point objects.
+	// PaperScript does that for us, and much more!
+	path.lineTo(start + [ 100, -50 ]);
+</script>
+-->
+
+
