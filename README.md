@@ -8,13 +8,22 @@ This repository provides the Source Code for the three Dynamic Effects in [Activ
 
 [Gradual Appearance](#ga)
 
+*File Structure*
 
+	- lib: //the 3rd party library
+	- src: //core codes 
+	- examples: //to demonstrate the usage of API
+	- API.md //API document
+	
 <a name="ma"/>
 ## Marching Ants
 
 
-##### marchingAnt([Path], [Ant], Interval, Gap, Shape[,Groupid, Color])
-Constructs a new effect of Ant with the settings.
+#####  <span style="color:blue">marchingAnt ([Path], [Ant], Interval, Gap, Shape [,Groupid, Color]) </span>
+Constructs a new effect of Ant with the settings. 
+
+[A demo is given in ./example/ma_basic1.js]
+
 ###### Parameters
 - The Path is an array of dots composed of the path that the ant marches defined by users, for instance, using a line represent the path of ant marching
 
@@ -40,12 +49,15 @@ Constructs a new effect of Ant with the settings.
 
 - The Groupid represents the groups of ants in common fate. That is, if two or more ants are the same Groupid, the Interval or Gap of these ants will change simutanouesly when modifying the Interval or Gap. 
 
-##### loadMA(JsonFilename[,canvasId])
+##### <span style="color:blue"> loadMA (fileName [, canvasId]) </span>
 Constructs a new effect of Ant on the basis of the content in JSON file user defined.
-###### Parameters
-- The JsonFilename is the file which contains the information of ants you want to load. 
 
-	e.g., JsonFilename = "circos.json"
+[A demo is given in ./example/ma_basic2.js]
+
+###### Parameters
+- fileName: the JSON file which configures the information of ants you want to load. 
+
+	e.g., fileName = "circos.json"
 
 	Below is the content of JSON file.
 
@@ -94,11 +106,10 @@ Constructs a new effect of Ant on the basis of the content in JSON file user def
 	    }
 
   
-	"name" represents the name of the effect, "magroups" contains the information of ant. In "magroups", "orange" represents the groupid of the this part of ant which consists of "mainfo" and "malist". "mainfo" stored the information of the ant, such as color, shape, groupid, gap. "malist" consists of "path", "ant" and "boundary". "path", "ant" and "boundary" present aspectively the path, itself and the boundary of the effect.
+	where "name" represents the name of the effect, "magroups" holds multiple Marching Ants effects. Each one is indexed by a unique id (e.g., "orange" here), and two decriptive information "mainfo" and "malist". "mainfo" stored the non-geometric information of the ant, such as color, groupid, gap. "malist" defines the geometry information, i.e., "path", "ant" and "boundary".
 
 
-
-- If you create the canvas, please set the id of the canvas you create as the canvasId, the effect of the ant will render on the canvas you create. If you don't create canvas which means you don't specify canvasId or the canvasId you input is undefined, the function will create a 800x800 canvas and the effect of ant will render on this canvas.
+- canvasId: the id of the canvas on which Dynamic Effect to be rendered. If canvas is undefined, a 800x800 canvas will be created.
 
 	e.g., canvasId = "aecanvas"
 
