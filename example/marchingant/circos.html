@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <style>
+            div{position:absolute;left:7px;top:8px;z-index: -1;}
+            canvas{position:absolute;left:0px;top:0px;}
+        </style>
+    </head>
+    <body>
+        <script src = "../../lib/EventEmitter.js"></script>
+        <script src = "../../lib/jquery.js"></script>
+        <script src = "../../lib/jscolor.min.js"></script>
+        <script src = "../../lib/paper-full.js"></script>
+        <script src = "../../lib/d3.js"></script>
+        <script src = "../../src/js/circos.js"></script>
+        
+        <canvas id = "aecanvas" width="800" height="800" display=" inline"></canvas>
+        <div id = "divcircos" width="800" height="800">
+            <img src="../../img/circos.png" style="width: 800px"></img>
+        </div>
+        
+        <script>
+            loadMa("circos.json", "aecanvas")
+        </script>
+        
+    </body>
+</html>
