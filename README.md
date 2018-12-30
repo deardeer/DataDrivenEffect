@@ -4,9 +4,9 @@ This repository provides the Source Code for the three Dynamic Effects in [Activ
 
 - [Marching Ants](#marching-ants)
 
-- [Geometric Deformation](#gd)
+- [Geometric Deformation](#geometric-deformation)
 
-- [Gradual Appearance](#ga)
+- [Gradual Appearance](#gradual-appearance)
 
 *File Structure*
 
@@ -15,7 +15,7 @@ This repository provides the Source Code for the three Dynamic Effects in [Activ
 	- examples: //to demonstrate the usage of API
 	- API.md //API document
 	
-<!-- <a name="ma"/> -->
+
 ## Marching Ants
 
 
@@ -113,9 +113,9 @@ Constructs a new effect of Ant on the basis of the content in JSON file user def
 
 	e.g., canvasId = "aecanvas"
 
-<a names="gd"/>
-##Geometric Deformation
+
+## Geometric Deformation
 
 
 <a names="ga"/>
-##Gradual Appearance
+## Gradual Appearance
