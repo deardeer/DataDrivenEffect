@@ -2,7 +2,7 @@
 
 This repository provides the Source Code for the three Dynamic Effects in [Activating Chart Project](https://vizgroup.github.io/activateviz/)
 
-- [Marching Ants](#ma)
+- [Marching Ants](#marching-ants)
 
 - [Geometric Deformation](#gd)
 
@@ -15,7 +15,7 @@ This repository provides the Source Code for the three Dynamic Effects in [Activ
 	- examples: //to demonstrate the usage of API
 	- API.md //API document
 	
-<a name="ma"/>
+<!-- <a name="ma"/> -->
 ## Marching Ants
 
 
