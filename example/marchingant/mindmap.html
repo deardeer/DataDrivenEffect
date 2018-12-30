@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <style>
-            div{position:absolute;left:7px;top:8px;z-index: -1;}
+            div{position:absolute;left:103px;top:90px;z-index: -1;}
             canvas{position:absolute;left:0px;top:0px;}
         </style>
     </head>
@@ -24,11 +24,11 @@
 
         <canvas id = "aecanvas" width="800" height="800" display=" inline"></canvas>
         <div id = "divcircos" width="800" height="800">
-            <img src = "{{static_url('./img/circos.png')}}" style="width: 800px"></img>
+            <img src = "{{static_url('./img/mindmap.png')}}" style="width: 800px"></img>
         </div>
         
         <script>
-            loadMa("{{static_url('./data/circos.json')}}", "aecanvas")
+            loadMa("{{static_url('./data/mindmap.json')}}", "aecanvas")
         </script>
         
     </body>

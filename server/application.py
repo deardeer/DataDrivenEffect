@@ -12,7 +12,7 @@ import os
 setting = dict(
   # template_path=os.path.join(os.path.dirname(__file__),"template"),
   static_path=os.path.join(os.path.dirname(__file__),"../"), #.. 上级目录，.当前目录
-  template_path=os.path.join(os.path.dirname(__file__), "./")
+  template_path=os.path.join(os.path.dirname(__file__), "../")
 )
 
 application = tornado.web.Application(
