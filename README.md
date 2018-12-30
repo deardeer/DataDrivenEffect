@@ -1,6 +1,6 @@
 # Dynamic Effects
 
-This repository provides the Source Code for the three Dynamic Effects in [![Activating Chart Project]](https://vizgroup.github.io/activateviz/)
+This repository provides the Source Code for the three Dynamic Effects in [Activating Chart Project](https://vizgroup.github.io/activateviz/)
 
 - [Marching Ants](#ma)
 
