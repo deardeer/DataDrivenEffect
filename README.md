@@ -22,7 +22,7 @@ This repository provides the Source Code for the three Dynamic Effects in [Activ
 #####  <span style="color:blue">marchingAnt ([Path], [Ant], Interval, Gap, Shape [,Groupid, Color]) </span>
 Constructs a new effect of Ant with the settings. 
 
-[A demo is given in ./example/ma_basic1.js]
+[A demo is given in ./example/]
 
 ###### Parameters
 - The Path is an array of dots composed of the path that the ant marches defined by users, for instance, using a line represent the path of ant marching
@@ -52,7 +52,7 @@ Constructs a new effect of Ant with the settings.
 ##### <span style="color:blue"> loadMA (fileName [, canvasId]) </span>
 Constructs a new effect of Ant on the basis of the content in JSON file user defined.
 
-[A demo is given in ./example/ma_basic2.js]
+[A demo is given in ./example/circos.html]
 
 ###### Parameters
 - fileName: the JSON file which configures the information of ants you want to load. 
@@ -117,5 +117,5 @@ Constructs a new effect of Ant on the basis of the content in JSON file user def
 ## Geometric Deformation
 
 
-<a names="ga"/>
+
 ## Gradual Appearance

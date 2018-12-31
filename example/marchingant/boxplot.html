@@ -3,12 +3,11 @@
     <head>
         <meta charset="utf-8">
         <style>
-            div{position:absolute;left:0px;top:0px;z-index: -1;}
-            canvas{position:absolute;left:0px;top:10px;}
+            div{position:absolute;left:180px;top: 225px;z-index: -1;}
+            canvas{position:absolute;left:0px;top:0px;}
         </style>
     </head>
     <body>
-       
         <!-- <script src = "../../lib/EventEmitter.js"></script>
         <script src = "../../lib/jquery.js"></script>
         <script src = "../../lib/jscolor.min.js"></script>
@@ -24,12 +23,13 @@
         <script src = "{{static_url('./src/js/circos.js')}}"></script>
 
         <canvas id = "aecanvas" width="800" height="800" display=" inline"></canvas>
-        <div id = "divcircos" >
-            <img src = "{{static_url('./img/minard1858world2.png')}}" style="width: 1100px"></img>
+        <div id = "divcircos" width="800" height="800">
+            <!-- <img src = "{{static_url('./img/boxplot.png')}}" style="width: 610px;height: 350px"></img> -->
+            <img src="{{static_url('./img/boxplot.png')}}" style="width:800px">
         </div>
         
         <script>
-            loadMa("{{static_url('./data/minard1858world2.json')}}", "aecanvas")
+            loadMa("{{static_url('./data/boxplot.json')}}", "aecanvas")
         </script>
         
     </body>
