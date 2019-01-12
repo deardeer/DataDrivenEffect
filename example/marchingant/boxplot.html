@@ -20,17 +20,165 @@
         <script src = "{{static_url('./lib/jscolor.min.js')}} "></script>
         <script src = "{{static_url('./lib/paper-full.js')}} "></script>
         <script src = "{{static_url('./lib/d3.js')}} "></script>
-        <script src = "{{static_url('./src/js/circos.js')}}"></script>
+        <script src = "{{static_url('./src/js/boxplot.js')}}"></script>
+        <script src = "{{static_url('./src/js/marchingants.js')}}"></script>
 
         <canvas id = "aecanvas" width="800" height="800" display=" inline"></canvas>
         <div id = "divcircos" width="800" height="800">
-            <!-- <img src = "{{static_url('./img/boxplot.png')}}" style="width: 610px;height: 350px"></img> -->
-            <img src="{{static_url('./img/boxplot.png')}}" style="width:800px">
+            <!-- <img src="{{static_url('./img/boxplot.png')}}" style="width:800px"> -->
+            <script>
+                this.boxplot = function(){
+                var imgWidth, imgHeight;
+                var largeScreenSizeSetting = {width: 1020, height: 720}
+                var smallScreenSizeSetting = {width: 800, height: 600}
+
+                imgWidth = smallScreenSizeSetting.width
+                imgHeight = smallScreenSizeSetting.height
+
+                var _svg = d3.selectAll('svg')
+                .attr('width', imgWidth)
+                .attr('height', imgHeight);
+
+                console.log(' canvas width ', imgWidth, imgHeight);
+
+                var _canvas = d3.select('#aecanvas')
+                                .attr('width', imgWidth)
+                                .attr('height', imgHeight);
+
+                var canvas = document.getElementById('aecanvas');
+                // Create an empty project and a view for the canvas:
+                paper.setup(canvas);
+                paper.install(window);
+                paper.view.draw();
+
+                functionHub = FunctionHub();
+                this._geometrySaver = new GeometrySaver(this);
+                this._animateEditor = new AnimateEditor(this);
+                this._animateEnhancer = new AnimateEnhancer();
+                this._animateDomManager = new AnimateDomManager(this);
+
+                drawBoxplot();
+                var result = autoBoxplotMA();
+                console.log("**********************")
+                console.log("resultindex", result)
+                var antModal = result['antmodal']
+                var allGroupMap = result['groups']
+                var liGroupId = Object.keys(allGroupMap);
+                for(var i = 0; i < liGroupId.length; i ++){
+                    var groupId = liGroupId[i];
+                    var tempGroup = allGroupMap[groupId];
+                    functionHub.addMAbyGroupwithExampleAnt(tempGroup, antModal);
+                }
+                functionHub.setFunc({type: 'animate'})
+            }
+            </script>
         </div>
         
         <script>
-            loadMa("{{static_url('./data/boxplot.json')}}", "aecanvas")
+            var imgWidth, imgHeight;
+            var largeScreenSizeSetting = {width: 1020, height: 720}
+            var smallScreenSizeSetting = {width: 800, height: 600}
+
+            imgWidth = smallScreenSizeSetting.width
+            imgHeight = smallScreenSizeSetting.height
+
+            var _svg = d3.selectAll('svg')
+            .attr('width', imgWidth)
+            .attr('height', imgHeight);
+
+            console.log(' canvas width ', imgWidth, imgHeight);
+
+            var _canvas = d3.select('#aecanvas')
+                            .attr('width', imgWidth)
+                            .attr('height', imgHeight);
+
+            var canvas = document.getElementById('aecanvas');
+            // Create an empty project and a view for the canvas:
+            paper.setup(canvas);
+            paper.install(window);
+            paper.view.draw();
+
+            // functionHub = FunctionHub();
+            // this._geometrySaver = new GeometrySaver(this);
+            // this._animateEditor = new AnimateEditor(this);
+            // this._animateEnhancer = new AnimateEnhancer();
+            // this._animateDomManager = new AnimateDomManager(this);
+
+            drawBoxplot();
+            var result = autoBoxplotMA();
+            console.log("**********************")
+            console.log("resultindex", result)
+            var antModal = result['antmodal']
+            var allGroupMap = result['groups']
+            console.log("antmodal",antModal)
+            console.log("allGroupMap", allGroupMap)
         </script>
         
+        <script>
+            this.marchingAnt = function(Path, Ant, Interval, Gap, GroupId, Color){
+
+                var canvas = document.getElementById('aecanvas');
+                // Create an empty project and a view for the canvas:
+                paper.setup(canvas);
+                paper.install(window);
+
+                this._functionHub = FunctionHub();
+                this._geometrySaver = new GeometrySaver(this);
+                this._animateEditor = new AnimateEditor(this);
+                this._animateEnhancer = new AnimateEnhancer();
+                this._animateDomManager = new AnimateDomManager(this);
+
+                this._liStoreMAIndex = []
+                var malist = []
+                var aeInfo = {}
+                var malistpath = {"geotype":"area", "dots":Path}
+                var malistant = {"geotype":"area", "dots":Ant} 
+                malist.push({"path": malistpath, "ant": malistant})
+                aeInfo["ae"] = "MA"
+                aeInfo["antcolor"] = Color
+                aeInfo["antgap"] = Gap
+                aeInfo["antinterval"] = Interval
+                aeInfo["groupid"] = GroupId ;
+                console.log("malist:", malist);
+                console.log("aeInfo", aeInfo) ;
+
+                if(malist != undefined){
+                    var liGeometryType = ['path','ant','boundary'];
+                    //todo-clear original
+                    // for(var index in mapIndexMA){
+                    for(var j = 0; j < malist.length; j ++){
+                        var ma = malist[j];
+                        //geometry
+                        for(var p = 0; p < liGeometryType.length; p ++){
+                            var type = liGeometryType[p];
+                            console.log("ma",ma)
+                            console.log("type",type)
+                            console.log("ma[type]",ma[type])
+                            if(ma[type] != undefined){
+                                console.log(' create geo ', ma[type]['dots']);
+                                this._geometrySaver.saveGeometryNew({'type': type, 'geotype': ma[type]['geoType']}, ma[type]['dots']);
+                            }   
+                        }
+                        //mainfo
+                        var MAGeometryInfo = this._geometrySaver.getCurrentMAGeometry();
+                        console.log(" MAGeometryInfo ", MAGeometryInfo, aeInfo);
+                        var MAGeometryIndex = this._geometrySaver.addMAGeometry(MAGeometryInfo);
+                        this._liStoreMAIndex.push(MAGeometryIndex);
+                        var animateResult = this._animateEnhancer.activateDOM(MAGeometryInfo, aeInfo);
+                        var metainfo = animateResult['metainfo'];
+                        console.log("metainfo", metainfo)
+                        //clear current MAGeometry
+                        //not exist before
+                        //this._geometrySaver.clearCurrentMAGeometry();
+                        this._animateDomManager.addMetaInfo(MAGeometryIndex, metainfo)
+                        this._animateEditor.addMADoms(MAGeometryIndex, metainfo); 
+                        this._functionHub._type = 'animate'
+                        this._functionHub.initFunc()  
+                    }
+                }
+
+            }
+
+        </script>
     </body>
 </html>

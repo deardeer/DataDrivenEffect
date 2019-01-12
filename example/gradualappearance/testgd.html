@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <body>
+
+        <script src = "./d3.js"></script>
+
+        <script>
+          this.gradualAppearance = function(visual_proxy, offset, repetition, speed){
+              proxy_clone = visual_proxy.select(function(){ 
+                                return this.parentNode.appendChild(this.cloneNode(0))
+                             })
+                             .attr("stroke","steelblue")
+                             .transition()
+                             .delay(offset*1000)
+                             // .duration(offset*1000)
+                             // .ease(d3.easeElastic)
+                             .attr("stroke", "red")
+                             
+
+            }
+        </script>
+        <script>
+            var width = 800;
+            var height = 500
+            var dataset = [250]
+
+            svg = d3.select("body")
+                    .append("svg")
+                    .attr("width",width)
+                    .attr("height",height)
+
+            rect = svg.selectAll("rect")
+               .data(dataset)
+               .enter()
+               .append("rect")
+               .attr("x",20)
+               .attr("y", 40)
+               .attr("width", 250)
+               .attr("height",250)
+               .attr("fill","steelblue")
+               .attr("opacity", 0.3)
+
+
+            circlebg1 = svg.selectAll("circle")
+               .data(dataset)
+               .enter()
+               .append("circle")
+               .attr("cx", 155)
+               .attr("cy", 150)
+               .attr("r", 80)
+               .attr("fill", "steelblue")
+               .attr("opacity", 0.4)
+
+            circlebg2 = svg.append("circle")
+               .attr("cx", 95)
+               .attr("cy", 250)
+               .attr("r", 30)
+               .attr("fill", "steelblue")
+               .attr("opacity", 0.4)
+
+            circlebg1in1 = svg.append("circle")
+               .attr("cx", 120)
+               .attr("cy", 155)
+               .attr("r", 28)
+               .attr("fill", "steelblue")
+               .attr("opacity", 0.5)
+
+            circlebg1in2 = svg.append("circle")
+               .attr("cx", 175)
+               .attr("cy", 130)
+               .attr("r", 20)
+               .attr("fill", "steelblue")
+               .attr("opacity", 0.5)
+
+            circlebg2in1 = svg.append("circle")
+               .attr("cx", 100)
+               .attr("cy", 250)
+               .attr("r", 10)
+               .attr("fill", "steelblue")
+               .attr("opacity", 0.5)
+
+            circlebg2in2 = svg.append("circle")
+               .attr("cx", 90)
+               .attr("cy", 265)
+               .attr("r", 7)
+               .attr("fill", "steelblue")
+               .attr("opacity", 0.5)
+
+            circlebg1in3 = svg.append("circle")
+               .attr("cx", 165)
+               .attr("cy", 185)
+               .attr("r", 17)
+               .attr("fill", "steelblue")
+               .attr("opacity", 0.5)
+
+
+            circlebg1in1in1 = svg.append("circle")
+               .attr("cx", 113)
+               .attr("cy", 140)
+               .attr("r", 8)
+               .attr("fill", "#315E84")
+               // .attr("opacity", 0.9)
+
+            // gradualAppearance(rect, 10, 3, 15)
+            gradualAppearance(circlebg1, 1, 3, 15)
+            gradualAppearance(circlebg2, 1, 3, 15)
+            gradualAppearance(circlebg1in1, 3, 3, 15)
+            gradualAppearance(circlebg1in2, 3, 3, 15)
+            gradualAppearance(circlebg1in3, 3, 3, 15)
+            gradualAppearance(circlebg2in1, 3, 3, 15)
+            gradualAppearance(circlebg2in2, 3, 3, 15)
+            gradualAppearance(circlebg1in1in1, 5, 3, 15)
+            
+            // visual_proxy = rect.select(function(){ 
+            //                     return this.parentNode.appendChild(this.cloneNode(0))
+            //                  })
+            //                  // .attr("x", 15)
+            //                  // .attr("y", 15)
+            //                  // .attr("width", 260)
+            //                  // .attr("height", 60)
+            //                  .attr("opacity",0.8)
+            //                  .attr("stroke", "red")
+        </script>
+        
+        
+
+    </body>
+</html>

@@ -22,7 +22,7 @@ This repository provides the Source Code for the three Dynamic Effects in [Activ
 #####  <span style="color:blue">marchingAnt ([Path], [Ant], Interval, Gap, Shape [,Groupid, Color]) </span>
 Constructs a new effect of Ant with the settings. 
 
-[A demo is given in ./example/]
+[A demo is given in ./example/marchingant]
 
 ###### Parameters
 - The Path is an array of dots composed of the path that the ant marches defined by users, for instance, using a line represent the path of ant marching
@@ -119,3 +119,32 @@ Constructs a new effect of Ant on the basis of the content in JSON file user def
 
 
 ## Gradual Appearance
+
+#####  <span style="color:blue">gradualAppearance (Visual_Proxy, Offset, Repetition, Speed) </span>
+Constructs a new effect of GD(gradual appearance) with the settings. 
+
+[A demo is given in ./example/gradualappearance]
+
+###### Parameters
+- The Visual_Proxy is the element of which you want to add the effect of gradual appearance, it should be a SVG element, such as the circle elements drawn with D3.
+
+	e.g., Visual_Proxy = circle
+
+		(cirlce = d3.select("svg")
+					.append("circle")
+					.attr("cx",50)
+					.attr("cy",60)
+					.attr("r",30)
+		)
+
+- The Offset is the time the effect of gradual appearance appears.The unit is seconds.
+
+	e.g., Offset = 3
+
+- The Repetition is the number of times the effect of gradual appearance occurs.
+
+	e.g., Repetition = 4
+
+- The Speed indicates how fast the effect of gradual appearance changes.
+
+	e.g., Speed = 5  

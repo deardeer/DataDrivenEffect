@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <style>
-            div{position:absolute;left:0px;top:0px;z-index: -1;}
+            div{position:absolute;left:7px;top:18px;z-index: -1;}
             canvas{position:absolute;left:0px;top:10px;}
         </style>
     </head>
@@ -15,17 +15,20 @@
         <script src = "../../lib/paper-full.js"></script>
         <script src = "../../lib/d3.js"></script>
         <script src = "../../src/js/circos.js"></script> -->
+        <canvas id = "aecanvas", width="1000" height="1000">
+            
+        </canvas>
 
         <script src = "{{static_url('./lib/EventEmitter.js')}} "></script>
         <script src = "{{static_url('./lib/jquery.js')}}"></script>
         <script src = "{{static_url('./lib/jscolor.min.js')}} "></script>
         <script src = "{{static_url('./lib/paper-full.js')}} "></script>
         <script src = "{{static_url('./lib/d3.js')}} "></script>
-        <script src = "{{static_url('./src/js/circos.js')}}"></script>
+        <script src = "{{static_url('./src/js/marchingants.js')}}"></script>
 
         <canvas id = "aecanvas" width="800" height="800" display=" inline"></canvas>
         <div id = "divcircos" >
-            <img src = "{{static_url('./img/minard1858world2.png')}}" style="width: 1100px"></img>
+            <img src = "{{static_url('./img/Minard1858World.jpg')}}" style="width: 1000px"></img>
         </div>
         
         <script>
