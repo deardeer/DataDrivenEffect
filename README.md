@@ -19,10 +19,10 @@ This repository provides the Source Code for the three Dynamic Effects in [Activ
 ## Marching Ants
 
 
-#####  <span style="color:blue">marchingAnt ([Path], [Ant], Interval, Gap, Shape [,Groupid, Color]) </span>
+#####  <span style="color:blue">marchingAnt ([Path], [Ant], Interval, Gap, Shape [,Groupid, Color, AntModal, IstheOne, IsLast]) </span>
 Constructs a new effect of Ant with the settings. 
 
-[A demo is given in ./example/marchingant]
+[A demo is given in ./example/marchingant/]
 
 ###### Parameters
 - The Path is an array of dots composed of the path that the ant marches defined by users, for instance, using a line represent the path of ant marching
@@ -48,6 +48,36 @@ Constructs a new effect of Ant with the settings.
  	 e.g., Color = "#aabbcc"
 
 - The Groupid represents the groups of ants in common fate. That is, if two or more ants are the same Groupid, the Interval or Gap of these ants will change simutanouesly when modifying the Interval or Gap. 
+
+- The AntModal represents that the effect is not defined by a JSON file.(Maybe the user defines the effect by themselves). If the effect of Ant is only one path, the AntModal don't have to be defined. The AntModal has relationship with parameters IstheOne and IsLast.
+	
+eg., AntModal = path1
+
+		var antDots = [[110,387],[129,399],[110,393],[91,400],[110,387]]
+		var path1 = new Path();
+		for(var i = 0; i < liDot.length; i ++){
+		    path1.add(new Point(liDot[i]))
+		  	path1.closed = closed;
+		}
+		
+
+- The IstheOne and IsLast are to handle the construction of marchingants when the user define more than one ant. When you loop through your Ants and add effect of marchingants for them, you should set IstheOne to "true" when you loop first time, otherwise set it "false" and set IsLast to "true" when it loop the last time.      
+
+	eg., 
+
+			var liGroupId = Object.keys(allGroupMap)
+            for(var i = 0; i < liGroupId.length; i ++){
+            	if(i == 0){
+                	theoneflag = true;
+                }
+                else{
+                    theoneflag = false;
+                }
+                if(i == liGroupId.length-1){
+                    thelastflag = true;
+                }
+				marchingAnt4(path, ant, interval, gap, groupId, color, antModal, theoneflag, thelastflag)
+			}
 
 ##### <span style="color:blue"> loadMA (fileName [, canvasId]) </span>
 Constructs a new effect of Ant on the basis of the content in JSON file user defined.

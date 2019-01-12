@@ -53,6 +53,55 @@ window.loadMa = function(filename, canvasid){
     }) 
 }
 
+window.marchingAnt4 = function(Path, Ant, Interval, Gap, GroupId, Color, AntModal, IstheOne, IsLast){
+
+    if(IstheOne == true){
+        this._functionHub = FunctionHub();
+    }
+    
+
+    var malist = []
+    var aeInfo = {}
+    var mapGroupIdMaList = {}
+
+    if(AntModal != undefined){
+        var boundry = {"dots": Path}
+        var path = {"dots": Ant}
+        malist.push({"boundry": boundry, "path": path})
+    }
+    else{
+        var malistpath = {"geotype":"area", "dots":Path}
+        var malistant = {"geotype":"area", "dots":Ant}
+        malist.push({"path": malistpath, "ant": malistant})
+    }
+     
+    
+    aeInfo["ae"] = "MA"
+    aeInfo["antcolor"] = Color
+    aeInfo["antgap"] = Gap
+    aeInfo["antinterval"] = Interval
+    aeInfo["groupid"] = GroupId ;
+    aeInfo["antshape"] = "self-defined"
+
+    mapGroupIdMaList["malist"] = malist
+    mapGroupIdMaList["mainfo"] = aeInfo
+
+    if(AntModal != undefined){
+        this._functionHub.addMAbyGroupwithExampleAnt(mapGroupIdMaList,AntModal)
+    }
+    else{
+        this._functionHub.addMAbyGroupInfo(mapGroupIdMaList[groupId], drawPath, canvasid)
+    }
+    // this._functionHub.addMAbyGroupwithExampleAnt(mapGroupIdMaList,AntModal)
+    
+    if(IsLast == true){
+        this._functionHub._type = 'animate'
+        this._functionHub.initFunc()
+    }  
+
+}
+
+/*
 window.marchingAnt = function(Path, Ant, Interval, Gap, GroupId, Color){
 
     var canvas = document.getElementById('aecanvas');
@@ -116,3 +165,4 @@ window.marchingAnt = function(Path, Ant, Interval, Gap, GroupId, Color){
     }
 
 }
+*/
