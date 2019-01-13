@@ -25,21 +25,24 @@ Constructs a new effect of Ant with the settings.
 [A demo is given in ./example/marchingant/]
 
 ###### Parameters
-- The Path is an array of dots composed of the path that the ant marches defined by users, for instance, using a line represent the path of ant marching
 
-	  e.g.,
-	  Path = [[x1, y1], [x2, y2], ...], where [x_i, y_i] is the dot position
-  
 - The Ant is an array of dots which compose the shape (visual proxity) of ant defined by users
 	
-	  e.g.,
-	  Ant = [[x1,y1], [x2,y2], [x3,y3]], where ant is marching with a shape of a triangle, the Ant is the array of dots of triangle. 
+		  e.g.,Ant = [[x1,y1], [x2,y2], [x3,y3]], where ant is marching with a shape of a triangle, the Ant is the array of dots of triangle. 
 
-- The Interval is the speed that the ant marches, its value is in the range[10, 30], the smaller the Interval is, the faster the ant marches. 
+- The Path is an array of dots composed of the path that the ant marches defined by users, for instance, using a line represent the path of ant marching  
+
+		  e.g.,Path = [[x1, y1], [x2, y2], ...], where [x_i, y_i] is the dot position
+  
+- The Boundry is an array of dots which regulate the boundary of Ant. If the Ant defined by user exceed the Boundary, the part of exceeding boundary will not be drawn.
+
+		e.g., Boundary = [[x1,y1], [x2,y2], [x3,y3]], where the ant will march within the boundary of [x_i,y_i] 
+
+- The Speed is the speed that the ant marches, its value is in the range[10, 30], the bigger the Interval is, the faster the ant marches. 
 
 
 
-- The Gap is the distance between every two ants, its value is in the range[10，30], the bigger the Gap is, the sparser ants are from each other. 
+- The Space is the distance between every two ants, its value is in the range[10，30], the bigger the Gap is, the sparser ants are from each other. 
 
 
 - If Color is specifying, it represents the color of ant. 
@@ -49,37 +52,8 @@ Constructs a new effect of Ant with the settings.
 
 - The Groupid represents the groups of ants in common fate. That is, if two or more ants are the same Groupid, the Interval or Gap of these ants will change simutanouesly when modifying the Interval or Gap. 
 
-- The AntModal represents that the effect is not defined by a JSON file.(Maybe the user defines the effect by themselves). If the effect of Ant is only one path, the AntModal don't have to be defined. The AntModal has relationship with parameters IstheOne and IsLast.
-	
-eg., AntModal = path1
+- The byExample has two values, true or false. When the user use the example defined by us, the byExample is true, otherwise is false.   
 
-		var antDots = [[110,387],[129,399],[110,393],[91,400],[110,387]]
-		var path1 = new Path();
-		for(var i = 0; i < liDot.length; i ++){
-		    path1.add(new Point(liDot[i]))
-		  	path1.closed = closed;
-		}
-		
-
-- The IstheOne and IsLast are to handle the construction of marchingants when the user define more than one ant. When you loop through your Ants and add effect of marchingants for them, you should set IstheOne to "true" when you loop first time, otherwise set it "false" and set IsLast to "true" when it loop the last time.      
-
-	eg., 
-
-			var liGroupId = Object.keys(allGroupMap)
-			MA_start()
-            for(var i = 0; i < liGroupId.length; i ++){
-            	if(i == 0){
-                	theoneflag = true;
-                }
-                else{
-                    theoneflag = false;
-                }
-                if(i == liGroupId.length-1){
-                    thelastflag = true;
-                }
-				marchingAnt4(path, ant, interval, gap, groupId, color, antModal, theoneflag, thelastflag)
-			}
-			MA_end()
 
 ##### <span style="color:blue"> loadMA (fileName [, canvasId]) </span>
 Constructs a new effect of Ant on the basis of the content in JSON file user defined.

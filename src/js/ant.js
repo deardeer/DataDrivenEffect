@@ -12,6 +12,8 @@ var FunctionHub = require("./functionhub.js");
 var GeometryDefiner = require("./geometrydefiner.js");
 var GeometrySaver = require("./geometrysaver.js");
 
+var isFirst = false
+var isLast = false
 
 window.loadMa = function(filename, canvasid){
 
@@ -53,10 +55,30 @@ window.loadMa = function(filename, canvasid){
     }) 
 }
 
-window.marchingAnt4 = function(Path, Ant, Interval, Gap, GroupId, Color, AntModal, IstheOne, IsLast){
 
-    if(IstheOne == true){
+window.MA_Start = function(){
+    isFirst = true
+}
+
+window.MA_End = function(){
+    isLast = true
+}
+
+
+window.marchingAnt = function(Ant, Path, Boundary, Speed, Space, GroupId, Color, byExample){
+
+    function createPath(liDot, closed){
+        var path = new paper.Path();
+        // path.strokeColor = 'black';
+        for(var i = 0; i < liDot.length; i ++)
+            path.add(new Point(liDot[i]))
+        path.closed = closed;
+        return path;
+    }
+
+    if(isFirst == true){
         this._functionHub = FunctionHub();
+        isFirst = false
     }
     
 
@@ -64,39 +86,43 @@ window.marchingAnt4 = function(Path, Ant, Interval, Gap, GroupId, Color, AntModa
     var aeInfo = {}
     var mapGroupIdMaList = {}
 
-    if(AntModal != undefined){
-        var boundry = {"dots": Path}
-        var path = {"dots": Ant}
+    if(byExample == true){
+        var antModal = createPath(Ant, true)
+        antModal.visible = false
+        var boundry = {"dots": Boundary}
+        var path = {"dots": Path}
         malist.push({"boundry": boundry, "path": path})
+        aeInfo["antinterval"] = Speed
     }
     else{
         var malistpath = {"geotype":"area", "dots":Path}
         var malistant = {"geotype":"area", "dots":Ant}
         malist.push({"path": malistpath, "ant": malistant})
+        aeInfo["antinterval"] = 30 - Speed
     }
      
     
     aeInfo["ae"] = "MA"
     aeInfo["antcolor"] = Color
-    aeInfo["antgap"] = Gap
-    aeInfo["antinterval"] = Interval
+    aeInfo["antgap"] = Space
     aeInfo["groupid"] = GroupId ;
     aeInfo["antshape"] = "self-defined"
 
     mapGroupIdMaList["malist"] = malist
     mapGroupIdMaList["mainfo"] = aeInfo
 
-    if(AntModal != undefined){
-        this._functionHub.addMAbyGroupwithExampleAnt(mapGroupIdMaList,AntModal)
+    if(antModal != undefined){
+        this._functionHub.addMAbyGroupwithExampleAnt(mapGroupIdMaList,antModal)
     }
     else{
         this._functionHub.addMAbyGroupInfo(mapGroupIdMaList[groupId], drawPath, canvasid)
     }
-    // this._functionHub.addMAbyGroupwithExampleAnt(mapGroupIdMaList,AntModal)
+
     
-    if(IsLast == true){
+    if(isLast == true){
         this._functionHub._type = 'animate'
         this._functionHub.initFunc()
+        isLast = false
     }  
 
 }

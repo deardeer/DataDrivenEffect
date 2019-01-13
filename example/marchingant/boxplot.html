@@ -24,9 +24,121 @@
         </div>
 
         <script>
+            function autoBoxplotMA(){
+                var exampleGroup = {};
+                var maGroupMap = {};
+                var antDots = [
+                    [ 
+                        110, 
+                        387
+                    ], 
+                    [ 
+                        129, 
+                        399
+                    ], 
+                    [ 
+                        129, 
+                        405
+                    ],    
+                    [ 
+                        110, 
+                        393
+                    ], 
+                    [ 
+                        92, 
+                        404
+                    ], 
+                    [ 
+                        91, 
+                        400
+                    ], 
+                    [ 
+                        110, 
+                        387
+                    ]
+                ] 
+
+                var mapMaInfo = {};
+                var mapMaList = {};
+
+                d3.selectAll('.boxplot')
+                    .each(function(d, i){
+                
+                        var box = d3.select(this).select('.box')
+                        var data = JSON.parse(d3.select(this).attr('data'))
+                        console.log(" data ", data);
+                        var width = +box.attr('width'), height = +box.attr('height')
+                        var mline = d3.select(this).select('.mline');
+                        var top = (margin.top + (+box.attr('y')));
+                        var middlepos = [ d3.select(this).node().getBoundingClientRect().left + (+mline.attr('x1') + width * 0.5),  (margin.top + (+mline.attr('y1')))];
+
+                        console.log(' boxplot ', d3.select(this).attr('groupid'));
+                        
+                        //upper 
+                        var upperma = {};
+                        var upppermainfo = {};
+
+                        upppermainfo = {
+                          "ae" : "MA",
+                          "antcolor" : "#ffffff63",
+                          "antshape" : "self-defined",
+                          "antgap" : 10,
+                          "antinterval" : 2 + Math.pow((data.q3 - data.median - 3), 2),
+                        }
+
+                        upperma['path'] = {
+                          dots: [middlepos, [middlepos[0], top]]
+                        }
+
+                        upperma['boundary'] = {
+                          dots: [[middlepos[0] - width/2., top], [middlepos[0] + width/2., top],
+                                 [middlepos[0] + width/2., middlepos[1]], [middlepos[0] - width/2., middlepos[1]], [middlepos[0] - width/2., top]]
+                        }
+
+                        upppermainfo['groupid'] = d3.select(this).attr('groupid') + '-up'
+                        mapMaInfo[upppermainfo['groupid']] = (upppermainfo);
+                        mapMaList[upppermainfo['groupid']] = [upperma]
+
+                        var bottomma = {};
+                        var bottommainfo = {};
+
+                        bottommainfo = {
+                          "ae" : "MA",
+                          "antcolor" : "#ffffff63",
+                          "antshape" : "self-defined",
+                          "antgap" : 10,
+                          "antinterval" : 2 + Math.pow((data.median - data.q1 - 3), 2)
+                        }
+
+                        bottomma['path'] = {
+                          dots: [middlepos, [middlepos[0], top + height]]
+                        }
+
+                        bottomma['boundary'] = {
+                          dots: [[middlepos[0] - width/2., middlepos[1]], [middlepos[0] + width/2., middlepos[1]],
+                                 [middlepos[0] + width/2., top + height], [middlepos[0] - width/2., top + height]]
+                        }
+
+                        bottommainfo['groupid'] = d3.select(this).attr('groupid') + '-bo'    
+                        mapMaInfo[bottommainfo['groupid']] = (bottommainfo);
+                        mapMaList[bottommainfo['groupid']] = [bottomma]
+                    })
+
+                    console.log(' liMaInfo ', mapMaInfo);
+                    console.log(' mapMaList ', mapMaList);
+                    var liGroupId = Object.keys(mapMaInfo);
+                    for(var i = 0; i < liGroupId.length; i ++){
+                        var groupid = liGroupId[i];
+                        maGroupMap[groupid]  = {
+                            'mainfo': mapMaInfo[groupid],
+                            'malist': mapMaList[groupid],
+                        }
+                    }
+
+                    return {'antdots': antDots, 'groups': maGroupMap};
+            }
+
             boxplot = function(){
-                var theoneflag
-                var thelastflag = false
                 var imgWidth, imgHeight;
                 var largeScreenSizeSetting = {width: 1020, height: 720}
                 var smallScreenSizeSetting = {width: 800, height: 600}
@@ -52,21 +164,15 @@
 
                 drawBoxplot();
                 var result = autoBoxplotMA();
-                var antModal = result['antmodal']
                 var allGroupMap = result['groups']
-                
+                var antDots = result['antdots']
                 var liGroupId = Object.keys(allGroupMap)
 
-                for(var i = 0; i < liGroupId.length; i ++){
-                    if(i == 0){
-                        theoneflag = true;
-                    }
-                    else{
-                        theoneflag = false;
-                    }
+                MA_Start()
 
+                for(var i = 0; i < liGroupId.length; i ++){
                     if(i == liGroupId.length-1){
-                        thelastflag = true;
+                        MA_End();
                     }
 
                     var groupId = liGroupId[i]
@@ -75,15 +181,15 @@
                     var aeInfo = tempGroup["mainfo"]
                     // console.log("aninfo", aeInfo)
                     var malist = tempGroup["malist"]
-                    interval = aeInfo["antinterval"]
-                    gap = aeInfo["antgap"]
+                    speed = aeInfo["antinterval"]
+                    space = aeInfo["antgap"]
                     color = aeInfo["antcolor"]
 
-                    ant = malist[0]["path"]["dots"]
-                    path = malist[0]["boundary"]["dots"]
-                    // functionHub.addMAbyGroupwithExampleAnt(tempGroup,antModal)
+                    ant = antDots
+                    path = malist[0]["path"]["dots"]
+                    boundary = malist[0]["boundary"]["dots"]
 
-                    marchingAnt(path, ant, interval, gap, groupId, color, antModal, theoneflag, thelastflag)
+                    marchingAnt(ant, path, boundary, speed, space, groupId, color, true)
                 }
             
             }
