@@ -19,7 +19,7 @@ This repository provides the Source Code for the three Dynamic Effects in [Activ
 ## Marching Ants
 
 
-#####  <span style="color:blue">marchingAnt ([Path], [Ant], Interval, Gap, Shape [,Groupid, Color, AntModal, IstheOne, IsLast]) </span>
+#####  <span style="color:blue">marchingAnt (Visual_proxy(Ant), Path, Boundary, Speed, Space [,Groupid, Color, byExample]) </span>
 Constructs a new effect of Ant with the settings. 
 
 [A demo is given in ./example/marchingant/]
@@ -66,6 +66,7 @@ eg., AntModal = path1
 	eg., 
 
 			var liGroupId = Object.keys(allGroupMap)
+			MA_start()
             for(var i = 0; i < liGroupId.length; i ++){
             	if(i == 0){
                 	theoneflag = true;
@@ -78,6 +79,7 @@ eg., AntModal = path1
                 }
 				marchingAnt4(path, ant, interval, gap, groupId, color, antModal, theoneflag, thelastflag)
 			}
+			MA_end()
 
 ##### <span style="color:blue"> loadMA (fileName [, canvasId]) </span>
 Constructs a new effect of Ant on the basis of the content in JSON file user defined.
