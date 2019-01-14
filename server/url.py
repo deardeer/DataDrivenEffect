@@ -11,7 +11,7 @@ from handler.pointhandler import MAMindmapHandler
 from handler.pointhandler import MAMinardHandler
 from handler.pointhandler import MAPlayfairHandler
 from handler.pointhandler import MABoxplotHandler
-from handler.pointhandler import GDCirclepackingHandler
+from handler.pointhandler import GACirclepackingHandler
 
 url=[
 	(r'/', IndexHandler),
@@ -19,5 +19,5 @@ url=[
     (r'/MAminard', MAMinardHandler),
     (r'/MAfair', MAPlayfairHandler),
     (r'/MABoxplot', MABoxplotHandler),
-    (r'/GDCirclepacking', GDCirclepackingHandler),
+    (r'/GACirclepacking', GACirclepackingHandler),
 ]

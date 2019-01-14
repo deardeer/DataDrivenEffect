@@ -43,6 +43,6 @@ class MABoxplotHandler(tornado.web.RequestHandler):
 	def get(self):
 		self.render("./example/marchingant/boxplot.html")
 
-class  GDCirclepackingHandler(tornado.web.RequestHandler):
+class  GACirclepackingHandler(tornado.web.RequestHandler):
 	def get(self):
-		self.render("./example/gradualappearance/testgd.html")
+		self.render("./example/gradualappearance/testga.html")
