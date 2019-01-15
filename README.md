@@ -18,8 +18,7 @@ This repository provides the Source Code for the three Dynamic Effects in [Activ
 
 ## Marching Ants
 
-![alt text](https://github.com/vizgroup/DataDrivenEffect/blob/master/rc/marchingant.png|width=100)
-
+<img src="https://github.com/vizgroup/DataDrivenEffect/blob/master/rc/marchingant.png" height="150">
 
 #####  <span style="color:blue">marchingAnt (Visual_proxy(Ant), Path, Boundary, Speed, Space [,Groupid, Color, byExample]) </span>
 Constructs a new effect of Ant with the settings. 
