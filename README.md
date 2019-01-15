@@ -127,6 +127,8 @@ Constructs a new effect of Ant on the basis of the content in JSON file user def
 
 ## Gradual Appearance
 
+<img src="https://github.com/vizgroup/DataDrivenEffect/blob/master/rc/gradualappearance.png" height="150">
+
 #####  <span style="color:blue">gradualAppearance (Visual_Proxy, Offset, Repetition, Speed) </span>
 Constructs a new effect of GD(gradual appearance) with the settings. 
 
