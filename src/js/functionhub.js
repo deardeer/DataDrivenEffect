@@ -45,7 +45,6 @@ function FunctionHub(example){
 		document.getElementById('saveMAName').value = (response['ma']['name']);
 		var mapGroupIdMaList = response['ma']['magroups'];
 		var drawPath = response['ma']['drawpath'];
-		console.log("mapGroupIdMaList", mapGroupIdMaList)
 		console.log(" draw Path ", drawPath);
 		var liGroupId = Object.keys(mapGroupIdMaList);
 		console.log("liGroupId", liGroupId) ;

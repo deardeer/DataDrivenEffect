@@ -130,8 +130,11 @@ function GeometrySaver(funcitonHub){
 		console.log(' liGeometry ', _para['type'], printstr);
 
 		// process the geometry points
+		var canvas = document.getElementsByTagName("canvas")
 		console.log("canvasid", canvasid)
-		var canvasBox = document.getElementById(canvasid).getBoundingClientRect();
+		// var canvasBox = document.getElementById("aecanvas").getBoundingClientRect();
+
+		var canvasBox = canvas[0].getBoundingClientRect();
 		var liNewGeometryPos = [];
 		for(var i = 0; i < liGeometryPos.length; i ++){
 			var pos = liGeometryPos[i]

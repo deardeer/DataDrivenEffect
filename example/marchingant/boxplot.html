@@ -117,6 +117,7 @@
             }
 
             boxplot = function(){
+                var point 
                 var imgWidth, imgHeight;
                 var largeScreenSizeSetting = {width: 1020, height: 720}
                 var smallScreenSizeSetting = {width: 800, height: 600}
@@ -133,8 +134,14 @@
                 // var _canvas = d3.select('#aecanvas')
                 //                 .attr('width', imgWidth)
                 //                 .attr('height', imgHeight);
+                // console.log("canvas", document.getElementsByTagName("canvas").getBoundingClientRect())
+                canvas1 = document.getElementsByTagName("canvas")
 
                 var canvas = document.getElementById('aecanvas');
+                console.log("id",canvas1[0].id)
+                console.log("canvas1",canvas1)
+                console.log("gggg", canvas.getBoundingClientRect)
+                console.log("canvas", canvas1[0].getBoundingClientRect())
                 // Create an empty project and a view for the canvas:
                 paper.setup(canvas);
                 paper.install(window);
@@ -167,6 +174,10 @@
                     path = malist[0]["path"]["dots"]
                     boundary = malist[0]["boundary"]["dots"]
 
+                    console.log("boundary", boundary)
+                    // console.log("boundary0",boundary[0])
+
+                    
                     marchingAnt(ant, path, boundary, speed, space, groupId, color, true)
                 }
             
@@ -192,7 +203,7 @@
 
             // MA_Start()
             // MA_End()
-            // var Path = [[50,75],[320,75]]
+            // var Path = [[50,75],[350,75]]
             // //var Ant = [[52,52],[52,97],[82,77]]
             // var Ant = [[50,50],[50,100],[75,75]]
             // var Interval = 10 ;

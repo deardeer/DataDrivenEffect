@@ -68,6 +68,7 @@ window.MA_End = function(){
 window.marchingAnt = function(Ant, Path, Boundary, Speed, Space, GroupId, Color, byExample){
 
     var drawPath
+    var canvasid
 
     function createPath(liDot, closed){
         var path = new paper.Path();
@@ -79,14 +80,7 @@ window.marchingAnt = function(Ant, Path, Boundary, Speed, Space, GroupId, Color,
         return path;
     }
 
-    if(canvasid == undefined){
-            var canvas = document.createElement("canvas");
-            canvas.width = 800
-            canvas.height = 800
-            canvas.id = "hhhcanvas"
-            canvasid = canvas.id
-            document.body.append(canvas)
-    }
+    
 
     if(isFirst == true){
         this._functionHub = FunctionHub();
@@ -107,11 +101,12 @@ window.marchingAnt = function(Ant, Path, Boundary, Speed, Space, GroupId, Color,
         aeInfo["antinterval"] = Speed
     }
     else{
-        var canvas = document.createElement("canvas");
-        canvas.width = 800
-        canvas.height = 800
-        canvas.id = "aecanvas"
-        document.body.append(canvas)
+        var canvas = document.getElementsByTagName("canvas")[0]
+        // var canvas = document.createElement("canvas");
+        // canvas.width = 800
+        // canvas.height = 800
+        // canvas.id = "aecanvas"
+        // document.body.append(canvas)
         paper.setup(canvas)
         paper.install(window)
 
@@ -137,7 +132,7 @@ window.marchingAnt = function(Ant, Path, Boundary, Speed, Space, GroupId, Color,
     }
     else{
         drawPath = undefined
-        this._functionHub.addMAbyGroupInfo(mapGroupIdMaList, drawPath)
+        this._functionHub.addMAbyGroupInfo(mapGroupIdMaList, drawPath, canvas.id)
     }
 
     
