@@ -20,6 +20,12 @@
         <script src="{{static_url('./lib/d3.js')}}"></script>
         
         <script>
+            var loop = false; 
+
+            GA_Loop = function(){
+                loop = true;
+            }
+
             gradualAppearance = function(Visual_proxy, Offset, Repetition, Speed){
 
                 var highlightcolor = "black"
@@ -31,10 +37,11 @@
                 var proxy_clone = Visual_proxy.select(function(){
                     return this.parentNode.insertBefore(this.cloneNode(1), this.nextSibling)
                 })
+                    .style("fill", "none");
 
                 intervalhandler = setInterval(function(){
                     proxy_clone
-                        .attr("class", "clonenode")
+                        .attr("class", "clonenode") 
                         .style("stroke", function(d){
                             if(Offset > 0){
                                 if(index < Offset)
@@ -45,11 +52,11 @@
                                 }
                             }
                             else if(Offset <= 0){
-                                return "none"
+                                return "none";
                             }
                                 
                         })
-                        .style('stroke-width', '1.5px')
+                        
                         // .style('stroke-dasharray', '2 2')
                 
                         index += 1;
@@ -59,6 +66,10 @@
                             proxy_clone
                                 .style("stroke", "none")
                             // clearInterval(intervalhandler)
+                            if(loop == true){
+                              repetitionflag = 0
+                              index = 0
+                            }
                         }
                 }, 1000 + Speed * 1000)
                 
@@ -424,9 +435,9 @@
               .style('fill', function(d){
                 return liColor[d.level]
               })
-              .style('stroke', function(){
-                return "black"//"#a6d854"//'black'
-              })
+              // .style('stroke', function(){
+              //   return "black"//"#a6d854"//'black'
+              // })
               .style('stroke-width', '2px')
               .style('opacity', function(d){
                 return 0.2
@@ -434,105 +445,13 @@
               .style('display', function(d){
                 return 'block'
               })
-
-              var coverRight = d3.select('#coversvg')
-              .selectAll('.treecoverrect')
-              .data(liRect)
-              .enter()
-              .append('line')
-              .attr("class","right")
-              .attr('x1', function(d){
-                return d['rect'][0][0] + d['rect'][1][0] - d['rect'][0][0]
-              })
-              .attr('x2', function(d){
-                return d['rect'][0][0] + d['rect'][1][0] - d['rect'][0][0]
-              })
-              .attr('y1', function(d){
-                return d['rect'][0][1]
-              })
-              .attr('y2', function(d){
-                return d['rect'][0][1] + d['rect'][2][1] - d['rect'][1][1]
-              })
               .style('effect', function(d){
+                  // GA_Loop()
                   gradualAppearance(d3.select(this), d.level, 1, 0.5)
-                })
-              // .style("stroke","black")
-              .style('stroke-width', shadow_width)
-
-              var coverUp = d3.select("#coversvg")
-              .selectAll("treecoverrect")
-              .data(liRect)
-              .enter()
-              .append('line')
-              .attr("class","up")
-              .attr('x1', function(d){
-                return d['rect'][0][0] 
               })
-              .attr('x2', function(d){
-                return d['rect'][1][0] 
-              })
-              .attr('y1', function(d){
-                return d['rect'][0][1] 
-              })
-              .attr('y2', function(d){
-                return d['rect'][1][1] 
-              })
-              // .style("stroke","black")
-              .style('effect', function(d){
-                gradualAppearance(d3.select(this), d.level, 1, 0.5)
-                return 1
-              })
-              .style('stroke-width', shadow_width)
-              
-              var coverLeft = d3.select("#coversvg")
-              .selectAll("treecoverrect")
-              .data(liRect)
-              .enter()
-              .append('line')
-              .attr("class","up")
-              .attr('x1', function(d){
-                return d['rect'][0][0] 
-              })
-              .attr('x2', function(d){
-                return d['rect'][3][0] 
-              })
-              .attr('y1', function(d){
-                return d['rect'][0][1] 
-              })
-              .attr('y2', function(d){
-                return d['rect'][3][1] 
-              })
-              // .style("stroke","black")
-              .style('effect', function(d){
-                gradualAppearance(d3.select(this), d.level, 1, 0.5)
-                return 1
-              })
-              .style('stroke-width', shadow_width)
-
-              var coverDown = d3.select("#coversvg")
-              .selectAll("treecoverrect")
-              .data(liRect)
-              .enter()
-              .append('line')
-              .attr("class","up")
-              .attr('x1', function(d){
-                return d['rect'][3][0] 
-              })
-              .attr('x2', function(d){
-                return d['rect'][2][0] 
-              })
-              .attr('y1', function(d){
-                return d['rect'][3][1] 
-              })
-              .attr('y2', function(d){
-                return d['rect'][2][1] 
-              })
-              // .style("stroke","black")
-              .style('effect', function(d){
-                gradualAppearance(d3.select(this), d.level, 1, 0.5)
-                return 1
-              })
-              .style('stroke-width', shadow_width)
+              // .style('stroke-width', shadow_width)
+              // .style('stroke-width', '2px')
+             
 
             d3.select('#coversvg')
               .selectAll('.treecoverrect')

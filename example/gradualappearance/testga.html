@@ -10,18 +10,28 @@
         <script src = "{{static_url('./lib/d3.js')}}"></script>
 
         <script>
+            var loop = false; 
+
+            GA_Loop = function(){
+                loop = true;
+            }
+
             gradualAppearance = function(Visual_proxy, Offset, Repetition, Speed){
 
                 var highlightcolor = "black"
                 var index = 0
                 var repetitionflag = 0
+                
+                console.log("visual_proxy", Visual_proxy)
 
                 var proxy_clone = Visual_proxy.select(function(){
                     return this.parentNode.insertBefore(this.cloneNode(1), this.nextSibling)
                 })
-                
+                    .style("fill", "none");
+
                 intervalhandler = setInterval(function(){
                     proxy_clone
+                        .attr("class", "clonenode") 
                         .style("stroke", function(d){
                             if(Offset > 0){
                                 if(index < Offset)
@@ -31,25 +41,25 @@
                                     return highlightcolor;
                                 }
                             }
-                            // else if(Offset <= 0){
-                            //     return "none"
-                            // }
-                                
+                            else if(Offset <= 0){
+                                return "none";
+                            }       
                         })
-                        .style('stroke-width', '1.5px')
-                        .style('stroke-dasharray', '2 2')
                 
                         index += 1;
-
-                        // console.log('ttt ', Offset)
 
                         if(repetitionflag >= Repetition+1){
                             proxy_clone
                                 .style("stroke", "none")
                             // clearInterval(intervalhandler)
+                            if(loop == true){
+                              repetitionflag = 0
+                              index = 0
+                            }
                         }
                 }, 1000 + Speed * 1000)
                 
+
             }
         </script>
 
@@ -118,10 +128,15 @@
                     .style("fill", function(d){
                         return color(d.depth)
                     })
+                    .style('stroke-dasharray', '2 2')
+                    .style('stroke-width', '1.5px')
                     .attr("effect", function(d){
+                        GA_Loop()
                         gradualAppearance(d3.select(this), d.depth - 1, (maxdepth-d.depth+1), 0.5)
                         return 1;
                     })
+
+                    
 
                 zoomTo([root.x, root.y, root.r * 2 + margin])
             })
