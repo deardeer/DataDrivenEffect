@@ -67,13 +67,25 @@ window.MA_End = function(){
 
 window.marchingAnt = function(Ant, Path, Boundary, Speed, Space, GroupId, Color, byExample){
 
+    var drawPath
+
     function createPath(liDot, closed){
         var path = new paper.Path();
+
         // path.strokeColor = 'black';
         for(var i = 0; i < liDot.length; i ++)
             path.add(new Point(liDot[i]))
         path.closed = closed;
         return path;
+    }
+
+    if(canvasid == undefined){
+            var canvas = document.createElement("canvas");
+            canvas.width = 800
+            canvas.height = 800
+            canvas.id = "hhhcanvas"
+            canvasid = canvas.id
+            document.body.append(canvas)
     }
 
     if(isFirst == true){
@@ -95,9 +107,18 @@ window.marchingAnt = function(Ant, Path, Boundary, Speed, Space, GroupId, Color,
         aeInfo["antinterval"] = Speed
     }
     else{
-        var malistpath = {"geotype":"area", "dots":Path}
-        var malistant = {"geotype":"area", "dots":Ant}
-        malist.push({"path": malistpath, "ant": malistant})
+        var canvas = document.createElement("canvas");
+        canvas.width = 800
+        canvas.height = 800
+        canvas.id = "aecanvas"
+        document.body.append(canvas)
+        paper.setup(canvas)
+        paper.install(window)
+
+        var path = {"geotype":"line", "dots":Path}
+        var ant = {"geotype":"area", "dots":Ant}
+        var boundary = {"geotype": "area", "dots": Boundary}
+        malist.push({"path": path, "ant": ant, "boundary": boundary})
         aeInfo["antinterval"] = 30 - Speed
     }
      
@@ -115,7 +136,8 @@ window.marchingAnt = function(Ant, Path, Boundary, Speed, Space, GroupId, Color,
         this._functionHub.addMAbyGroupwithExampleAnt(mapGroupIdMaList,antModal)
     }
     else{
-        this._functionHub.addMAbyGroupInfo(mapGroupIdMaList[groupId], drawPath, canvasid)
+        drawPath = undefined
+        this._functionHub.addMAbyGroupInfo(mapGroupIdMaList, drawPath)
     }
 
     
