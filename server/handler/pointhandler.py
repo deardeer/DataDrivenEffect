@@ -45,8 +45,12 @@ class MABoxplotHandler(tornado.web.RequestHandler):
 
 class  GACirclepackingHandler(tornado.web.RequestHandler):
 	def get(self):
-		self.render("./example/gradualappearance/testga.html")
+		self.render("./example/gradualappearance/circlepacking.html")
 
 class  GATreemapHandler(tornado.web.RequestHandler):
 	def get(self):
 		self.render("./example/gradualappearance/treemap.html")
+
+class GDMatrixHandler(tornado.web.RequestHandler):
+	def get(self):
+		self.render("./example/geometrydeformation/testgd.html")

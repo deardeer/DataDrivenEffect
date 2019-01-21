@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <!-- <script src = "//d3js.org/d3.v3.min.js"></script> -->
+        <script src = {{static_url("./lib/d3_v3.js")}}></script>
+        <script src = {{static_url("./src/js/fisheye.js")}}></script>
+    </head>
+    <body>
+        <div id = "mydiv">
+            <svg id = "mysvg" width = '800' height = "800"></svg>
+        </div>
+
+        <script>
+            geometryDeformation = function(Visual_proxy, Focal, Bandwidth, Speed, Context){
+                console.log("Visual_proxy", Visual_proxy)
+                var steplist = []
+                var index = 0
+                
+                //define steplist
+                for(var i = 0; i <= Bandwidth; i++){
+                  steplist.push(i)
+                }
+                for(var j = Bandwidth-1; j >0; j--){
+                  steplist.push(j)
+                }
+
+                var lineFunction = d3.svg.line()
+                        .x(function(d){return d.x})
+                        .y(function(d){return d.y})
+                        .interpolate("linear")
+
+                var fisheye = d3.fisheye()
+                  .radius(100)
+                  .center(Focal)
+
+                console.log("steplist" ,steplist)
+
+                if(Visual_proxy[0][0].tagName == "rect"){
+                    var rectgraph = svg.append("path")
+                        .attr("class", "rectgraph")
+                        .attr("stroke", "black")
+                        .attr("stroke-width", 2)
+                        .attr("fill", "none")
+                    var x = parseInt(Visual_proxy.attr("x"))
+                    var y = parseInt(Visual_proxy.attr("y"))
+                    var height = parseInt(Visual_proxy.attr("height"))
+                    var width =  parseInt(Visual_proxy.attr("width")); 
+                    var liPoint = []
+                    liPoint.push({"x": x, "y": y})
+                    liPoint.push({"x": x + width, "y": y})
+                    liPoint.push({"x": x + width, "y": y + height})
+                    liPoint.push({"x": x, "y": y + height})
+                    liPoint.push({'x': x, 'y': y})
+                    
+                }
+                else if(Visual_proxy[0][0].tagName == "path"){
+                  var proxy_clone = Visual_proxy.select(function(){
+                    return this.parentNode.insertBefore(this.cloneNode(1), this.nextSibling)
+                  })
+                  var liPoint = JSON.parse(Visual_proxy.attr("data"))
+                }
+
+                var interval = setInterval(function(){
+
+                  fisheye.radius(100 * steplist[index])
+
+                  if(Visual_proxy[0][0].tagName == "rect"){
+                    var newdata = []
+                    var firstnode, lastnode ;
+                    rectgraph
+                        .attr("d", function(d){
+                          for(var index in liPoint){
+                            var point = liPoint[index]
+                            var newpoint = fisheye([point['x'], point['y']])
+                            newdata.push({'x': newpoint[0], 'y': newpoint[1]})
+                          }
+                          return lineFunction(newdata)
+                        })
+                  }
+                  else if(Visual_proxy[0][0].tagName == "path"){
+                    var newdata = []
+                    proxy_clone
+                      .attr("d",function(d){
+                        for(var index in liPoint){
+                          var point = liPoint[index]
+                          var newpoint = fisheye([point['x'], point['y']])
+                          newdata.push({'x': newpoint[0], 'y': newpoint[1]})
+                        }
+                        return lineFunction(newdata)
+                      })
+                  }
+
+                  index += 1;
+                  if(index >= steplist.length){
+                    index = 0
+                  }
+
+                }, 1000 + Speed*1000)
+
+            }
+        </script>
+            
+        <script>
+
+        var svg = d3.select("#mysvg")
+    
+        var lineFunction = d3.svg.area()
+              .x(function(d) { return d.x; })
+              .y(function(d) { return d.y; })
+              .interpolate('linear');
+
+        var data = [ 
+            { "x": 1,   "y": 5},  
+            { "x": 20,  "y": 20},
+            { "x": 40,  "y": 10}, 
+            { "x": 60,  "y": 40},
+            { "x": 80,  "y": 5},  
+            { "x": 100, "y": 60}
+        ];
+
+        var circle = svg.append("circle")
+                      .attr("cx", 250)
+                      .attr("cy", 200)
+                      .attr("r", 45)
+                      .style("fill", "#ffffff")
+                      .style("stroke", "steelblue")
+                      .attr("stoke-width", '5px')
+
+        var rect = svg.append("rect")
+                      .attr("x", 300)
+                      .attr("y", 50)
+                      .attr("width", 120)
+                      .attr("height", 50)
+                      .attr("fill" , "#ffffff")
+                      .attr("stroke", "steelblue")
+                      .style("effect", function(){
+                        geometryDeformation(d3.select(this), [360,75], 4, 0.1)
+                      })
+
+        console.log("circle", circle[0][0].tagName == "circle")
+
+        var linegraph = svg.append("path")
+            .attr("data",function(){ 
+                var linedata = data
+                return JSON.stringify(data)
+                })
+            .attr("d", lineFunction(data))
+            .attr("transform", "translate(70,70)")
+            .attr("stroke", "black")
+            .attr("stroke-width", 2)
+            .attr("fill", "none")
+            .style("effect", function(){
+                console.log("centroid", d3.select(this)[0])
+                geometryDeformation(d3.select(this), [51,24], 3, 0.3)
+            });
+
+        </script>
+    </body>
+</html>
