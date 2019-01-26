@@ -59,6 +59,11 @@ class GDScatterplotHandler(tornado.web.RequestHandler):
 	def get(self):
 		self.render("./example/geometrydeformation/scatterplotgd.html")
 
+class GDPathHandler(tornado.web.RequestHandler):
+	def get(self):
+		self.render("./example/geometrydeformation/pathgd.html")
+
+
 
 
 

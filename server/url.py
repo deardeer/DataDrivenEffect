@@ -15,6 +15,7 @@ from handler.pointhandler import GACirclepackingHandler
 from handler.pointhandler import GATreemapHandler
 from handler.pointhandler import GDMatrixHandler
 from handler.pointhandler import GDScatterplotHandler
+from handler.pointhandler import GDPathHandler
 
 url=[
 	(r'/', IndexHandler),
@@ -26,4 +27,5 @@ url=[
     (r'/GATreemap', GATreemapHandler),
     (r'/GDMatrix', GDMatrixHandler),
     (r'/GDScatterplot', GDScatterplotHandler),
+    (r'/GDPath', GDPathHandler),
 ]
