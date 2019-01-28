@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <script src = {{static_url("./lib/d3_v3.js")}}></script>
+        <script src = {{static_url("./src/js/fisheye.js")}}></script>
+        <script src = {{static_url("./src/js/gd.js")}}></script>
+    </head>
+    <body>
+        <div id = "mydiv">
+            <svg id = "mysvg" width = '800' height = "800"></svg>
+        </div>
+        <script>
+        var svg = d3.select("#mysvg")
+        var rect = svg.append("rect")
+                      .attr("x", 300)
+                      .attr("y", 50)
+                      .attr("width", 80)
+                      .attr("height", 80)
+                      .attr("fill" , "#ffffff")
+                      .attr("stroke", "steelblue")
+                      .style("effect", function(){
+                        geometryDeformation(d3.select(this), [340,90], 80, 0.3)
+                      })
+        </script>
+    </body>
+</html>

@@ -2,9 +2,9 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <!-- <script src = "//d3js.org/d3.v3.min.js"></script> -->
         <script src = {{static_url("./lib/d3_v3.js")}}></script>
         <script src = {{static_url("./src/js/fisheye.js")}}></script>
+        <script src = {{static_url("./src/js/gd.js")}}></script>
     </head>
     <body>
         <div id = "mydiv">
@@ -12,166 +12,7 @@
         </div>
 
         <script>
-            geometryDeformation = function(Visual_proxy, Focal, Bandwidth, Speed, Context){
-                console.log("Visual_proxy", Visual_proxy)
-                var steplist = [3,2,1,2,3]
-                var index = 0
-                var fistfisheyeradius = 20
-                
-                //define steplist
-                // for(var i = 0; i <= Bandwidth; i++){
-                //   steplist.push(i)
-                // }
-                // for(var j = Bandwidth-1; j >0; j--){
-                //   steplist.push(j)
-                // }
-
-                var lineFunction = d3.svg.line()
-                        .x(function(d){return d.x})
-                        .y(function(d){return d.y})
-                        .interpolate("linear")
-
-                var fisheye = d3.fisheye()
-                // .circular()
-                  .radius(fistfisheyeradius)
-                  // .distortion(2)
-                  .center(Focal)
-
-                // console.log("fisheye", fisheye)
-                console.log("steplist" ,steplist)
-
-                if(Visual_proxy[0][0].tagName == "rect"){
-                    var rectgraph = svg.append("path")
-                        .attr("class", "rectgraph")
-                        .attr("stroke", "black")
-                        .attr("stroke-width", 2)
-                        .attr("fill", "none")
-                    var x = parseInt(Visual_proxy.attr("x"))
-                    var y = parseInt(Visual_proxy.attr("y"))
-                    var height = parseInt(Visual_proxy.attr("height"))
-                    var width =  parseInt(Visual_proxy.attr("width")); 
-                    var liPoint = []
-                    for(var i = 0; i < 8; i++){
-                      liPoint.push({"x": (x + i / 8 * width), "y": y})
-                    }
-                    for(var j = 0; j < 8; j++){
-                      liPoint.push({"x": (x + width), "y": (y + j/8 * height)})
-                    }
-                    for(var k = 0; k < 8; k++){
-                      liPoint.push({"x": (x + width - k/8 * width), "y": (y + height)})
-                    }
-                    for(var l = 0; l <= 8; l++){
-                      liPoint.push({"x": x, "y": (y+height - l/8 * height)})
-                    }
-
-                    // liPoint.push({"x": x, "y": y})
-                    // liPoint.push({"x": x + width, "y": y})
-                    // liPoint.push({"x": x + width, "y": y + height})
-                    // liPoint.push({"x": x, "y": y + height})
-                    // liPoint.push({'x': x, 'y': y})
-                    console.log("rectliPoint", liPoint)
-                    
-                }
-                else if(Visual_proxy[0][0].tagName == "circle"){
-                  var r = parseInt(Visual_proxy.attr("r"))
-                  var cx = parseInt(Visual_proxy.attr("cx"))
-                  var cy = parseInt(Visual_proxy.attr("cy"))
-                  var proxy_clone = Visual_proxy.select(function(){
-                    return this.parentNode.insertBefore(this.cloneNode(1), this.nextSibling)
-                  })
-                    .attr("stroke", "black")
-                    .attr("stroke-width", 2)
-                  var liPoint = []
-                  var updot = {'x': cx , 'y': cy + r}
-                  liPoint.push(updot)
-                }
-                else if(Visual_proxy[0][0].tagName == "path"){
-                  var proxy_clone = Visual_proxy.select(function(){
-                    return this.parentNode.insertBefore(this.cloneNode(1), this.nextSibling)
-                  })
-                  var liPoint = JSON.parse(Visual_proxy.attr("data"))
-                }
-                var interval = setInterval(function(){
-                  
-
-                  // console.log("index", index)
-                  console.log("radius", (fistfisheyeradius + Bandwidth) / steplist[index])
-                  // fisheye.radius(100 * steplist[index])
-                  fisheye.radius( (fistfisheyeradius + Bandwidth) / steplist[index] )
-
-                  if(Visual_proxy[0][0].tagName == "rect"){
-                    console.log("index", index)
-                    var newdata = []
-                    var firstnode, lastnode ;
-                    rectgraph
-                        .attr("d", function(d){
-                          console.log("liPoint", liPoint)
-                          for(var liIndex in liPoint){
-                            var point = liPoint[liIndex]
-                            console.log("pointx", point['x'])
-                            console.log("pointy", point['y'])
-                            console.log("[index]",liIndex)
-                            if(liIndex == 0 || liIndex == 8 || liIndex == 16 || liIndex == 24 || liIndex == 32){
-                              console.log("ffffffffff")
-                              newdata.push({'x': point['x'], 'y': point['y']})
-                              console.log("newdata1", newdata)
-                              continue;
-                            }
-                            var newpoint = fisheye([point['x'], point['y']])
-                            // if(index = 0){
-                            //   firstnode = newpoint[]
-                            // }
-                            console.log("newpoint", newpoint)
-                            newdata.push({'x': newpoint[0], 'y': newpoint[1]})
-                          }
-                          console.log("newdata", newdata)
-                          return lineFunction(newdata)
-                        })
-                  }
-                  else if(Visual_proxy[0][0].tagName == "circle"){
-                    console.log("focal", Focal)
-                    for(var liIndex in liPoint){
-                      var point = liPoint[liIndex]
-                      var newpoint = fisheye([point['x'], point['y']])
-                      console.log("oldpoint", point)
-                      console.log("newcirclepoint", newpoint)
-                      var newr = newpoint[1] - cy;
-                    }
-                    proxy_clone
-                      .attr("r", newr)
-                    
-                  }
-                  else if(Visual_proxy[0][0].tagName == "path"){
-                    var newdata = []
-                    console.log("pathliPoint", liPoint)
-                    proxy_clone
-                      .attr("d",function(d){
-
-                        // var liPoint = JSON.parse(d3.select(this).attr("data"))
-                        for(var liIndex in liPoint){
-                          var point = liPoint[liIndex]
-                          // console.log("pathpoint", point)
-                          console.log("pathpointx", point['x'])
-                          console.log("pathpointy", point['y'])
-                          var newpoint = fisheye([point['x'], point['y']])
-                          newdata.push({'x': newpoint[0], 'y': newpoint[1]})
-                          console.log("pathpoint", newpoint)
-                        }
-                        // console.log("newdata", newdata)
-                        // console.log("#####", lineFunction(newdata))
-                        return lineFunction(newdata)
-                      })
-                  }
-
-                  index += 1;
-                  if(index >= steplist.length){
-                    console.log("000000000")
-                    index = 0
-                  }
-
-                }, 300 + Speed*1000)
-
-            }
+            
             
         </script>
             
@@ -185,11 +26,11 @@
         var dataset = [[0.5, 0.5],[0.7, 0.8],[0.4, 0.9],
                 [0.11, 0.32],[0.88, 0.25],[0.75, 0.12],
                 [0.5, 0.1],[0.2, 0.3],[0.4, 0.1]];
-        var width = 400;    // 可视区域宽度
-        var height = 400;   // 可视区域高度
+        var width = 400;   
+        var height = 400;   
 
-        var xAxisWidth = 300;   // x轴宽度
-        var yAxisWidth = 300;   // y轴宽度
+        var xAxisWidth = 300;   
+        var yAxisWidth = 300;   
 
         var padding = {top: 20, right: 20, bottom:20, left:50};
         

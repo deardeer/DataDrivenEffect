@@ -51,9 +51,9 @@ class  GATreemapHandler(tornado.web.RequestHandler):
 	def get(self):
 		self.render("./example/gradualappearance/treemap.html")
 
-class GDMatrixHandler(tornado.web.RequestHandler):
+class GDRectHandler(tornado.web.RequestHandler):
 	def get(self):
-		self.render("./example/geometrydeformation/testgd.html")
+		self.render("./example/geometrydeformation/rectgd.html")
 
 class GDScatterplotHandler(tornado.web.RequestHandler):
 	def get(self):

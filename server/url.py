@@ -13,7 +13,7 @@ from handler.pointhandler import MAPlayfairHandler
 from handler.pointhandler import MABoxplotHandler
 from handler.pointhandler import GACirclepackingHandler
 from handler.pointhandler import GATreemapHandler
-from handler.pointhandler import GDMatrixHandler
+from handler.pointhandler import GDRectHandler
 from handler.pointhandler import GDScatterplotHandler
 from handler.pointhandler import GDPathHandler
 
@@ -25,7 +25,7 @@ url=[
     (r'/MABoxplot', MABoxplotHandler),
     (r'/GACirclepacking', GACirclepackingHandler),
     (r'/GATreemap', GATreemapHandler),
-    (r'/GDMatrix', GDMatrixHandler),
+    (r'/GDRect', GDRectHandler),
     (r'/GDScatterplot', GDScatterplotHandler),
     (r'/GDPath', GDPathHandler),
 ]
