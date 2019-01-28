@@ -42,5 +42,5 @@ gradualAppearance = function(Visual_proxy, Offset, Repetition, Speed){
                   index = 0
                 }
             }
-    }, 1000 + Speed * 1000)
+    }, 800 + Speed * 1000)
 }

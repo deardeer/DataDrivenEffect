@@ -3,85 +3,24 @@
     <head>
         <meta charset="utf-8">
         <style>
-
         form {
           font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
-
         svg {
           font: 10px sans-serif;
         }
-
         </style>
     </head>
     <body>
         
         <svg id = "coversvg" width="960" height="570"></svg>
         <script src="{{static_url('./lib/d3.js')}}"></script>
-        
-        <script>
-            var loop = false; 
-
-            GA_Loop = function(){
-                loop = true;
-            }
-
-            gradualAppearance = function(Visual_proxy, Offset, Repetition, Speed){
-
-                var highlightcolor = "black"
-                var index = 0
-                var repetitionflag = 0
-                
-                console.log("visual_proxy", Visual_proxy)
-
-                var proxy_clone = Visual_proxy.select(function(){
-                    return this.parentNode.insertBefore(this.cloneNode(1), this.nextSibling)
-                })
-                    .style("fill", "none");
-
-                intervalhandler = setInterval(function(){
-                    proxy_clone
-                        .attr("class", "clonenode") 
-                        .style("stroke", function(d){
-                            if(Offset > 0){
-                                if(index < Offset)
-                                    return "none";
-                                else{
-                                    repetitionflag += 1
-                                    return highlightcolor;
-                                }
-                            }
-                            else if(Offset <= 0){
-                                return "none";
-                            }
-                                
-                        })
-                        
-                        // .style('stroke-dasharray', '2 2')
-                
-                        index += 1;
-
-
-                        if(repetitionflag >= Repetition+1){
-                            proxy_clone
-                                .style("stroke", "none")
-                            // clearInterval(intervalhandler)
-                            if(loop == true){
-                              repetitionflag = 0
-                              index = 0
-                            }
-                        }
-                }, 1000 + Speed * 1000)
-                
-
-            }
-        </script>
+        <script src="{{static_url('./src/js/ga.js')}}"></script>
 
         <script>
 
           function drawTreeMapLight(){
             console.log(' draw tree map light ');
-            // var color = d3.scale
             var liRect = [
               {
                 level: 1,
@@ -409,7 +348,6 @@
 
 
             var liColor = ["#c7e9c0", "#a1d99b", "#74c476", "#41ab5d", "#238b45", "#006d2c"]
-            // var shadowColor1 = 'white'
             var shadow_width = 2;
             
             d3.select('#coversvg').selectAll('.treecoverrect_new')
@@ -446,8 +384,7 @@
                 return 'block'
               })
               .style('effect', function(d){
-                  // GA_Loop()
-                  gradualAppearance(d3.select(this), d.level, 1, 0.5)
+                  gradualAppearance(d3.select(this), d.level, 1, 0.4)
               })
               // .style('stroke-width', shadow_width)
               // .style('stroke-width', '2px')
