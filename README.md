@@ -123,7 +123,7 @@ Constructs a new effect of Ant on the basis of the content in JSON file user def
 
 ## Geometric Deformation
 
-<img src="https://github.com/vizgroup/DataDrivenEffect/blob/master/rc/geometrydeformation.png" height="150>
+<img src="https://github.com/vizgroup/DataDrivenEffect/blob/master/rc/geometrydeformation.png" height="150">
 
 #####  <span style="color:blue">geometrydeformation (Visual_proxy, Focal, Bandwidth, Speed, Context) </span>
 Constructs a new effect of GD(gradual appearance) with the settings. 
