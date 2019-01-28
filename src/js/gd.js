@@ -125,6 +125,6 @@ geometryDeformation = function(Visual_proxy, Focal, Bandwidth, Speed, Context){
                     index = 0
                   }
 
-                }, 300 + Speed*1000)
+                }, Speed*1000)
 
             }

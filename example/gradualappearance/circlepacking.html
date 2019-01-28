@@ -79,7 +79,7 @@
                     .style('stroke-width', '1.5px')
                     .attr("effect", function(d){
                         GA_Loop()
-                        gradualAppearance(d3.select(this), d.depth - 1, (maxdepth-d.depth+1), 0.2)
+                        gradualAppearance(d3.select(this), d.depth - 1, (maxdepth-d.depth+1), 1)
                         return 1;
                     })
                 zoomTo([root.x, root.y, root.r * 2 + margin])

@@ -123,7 +123,48 @@ Constructs a new effect of Ant on the basis of the content in JSON file user def
 
 ## Geometric Deformation
 
+<img src="https://github.com/vizgroup/DataDrivenEffect/blob/master/rc/geometrydeformation.png" height="150>
 
+#####  <span style="color:blue">geometrydeformation (Visual_proxy, Focal, Bandwidth, Speed, Context) </span>
+Constructs a new effect of GD(gradual appearance) with the settings. 
+
+[A demo is given in ./example/geometrydeformation]
+
+###### Parameters
+- The Visual_Proxy is the element of which you want to add the effect of geometric deformation, it can be the circle or rect element defined by using D3.js, and it can be a path element defined by users.
+
+    e.g., Visual_Proxy = Circle(,Rect, Path)
+    
+        circle = d3.select("svg")
+                    .append("circle")
+                    .attr("cx",50)
+					.attr("cy",60)
+					.attr("r",30)
+		
+		rect = d3.select("svg")
+		        .append("rect")
+		        .attr("cx", 70)
+		        .attr("cy", 80)
+		        .attr("width", 60)
+		        .attr("heitht". 60)
+		 
+		multigraph = svg.append("path")
+            .attr("d", lineFunction(data2))
+            .attr("stroke", "black")
+   
+- The Focal is the center of effect where you want to apply, such as the figure source is the rect, the Focal will be the centroid of the rect. And the Focal will a array.
+
+    e.g., Focal = [50, 50]
+    
+         
+- The Bandwidth is the size that you want the figure source amplify. Such as you want the rect defined by youself amplify 50px, the Bandwidth will be 50 and the radius of effect of fisheye will be 50px.
+    
+    e.g., Bandwidth = 50
+
+- The Speed indicates how fast the effect of geometric deformation changes. And the units are seconds.
+
+    e.g., Speed = 0.6
+            
 
 ## Gradual Appearance
 
@@ -154,6 +195,6 @@ Constructs a new effect of GD(gradual appearance) with the settings.
 
 	e.g., Repetition = 4
 
-- The Speed indicates how fast the effect of gradual appearance changes.
+- The Speed indicates how fast the effect of gradual appearance changes. And the units are seconds.
 
-	e.g., Speed = 5  
+	e.g., Speed = 1.2  
