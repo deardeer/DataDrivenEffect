@@ -24,6 +24,8 @@
         </div>
 
         <script>
+
+            //Deal with the array of ant called antDots
             function autoBoxplotMA(){
                 var exampleGroup = {};
                 var maGroupMap = {};
@@ -119,14 +121,8 @@
                     return {'antdots': antDots, 'groups': maGroupMap};
             }
 
+            //obtain the data of ants from function autoBoxplotMA(), and collate the data into a form that is called by API
             boxplot = function(){
-
-                var lineFunction = d3.line()
-                  .x(function(d) { return d.x; })
-                  .y(function(d) { return d.y; })
-                  // .interpolate('linear');
-
-                console.log("DDDDDDDDD")
                 var point 
                 var imgWidth, imgHeight;
                 var largeScreenSizeSetting = {width: 1020, height: 720}
@@ -141,10 +137,6 @@
 
                 console.log(' canvas width ', imgWidth, imgHeight);
 
-                // var _canvas = d3.select('#aecanvas')
-                //                 .attr('width', imgWidth)
-                //                 .attr('height', imgHeight);
-                // console.log("canvas", document.getElementsByTagName("canvas").getBoundingClientRect())
                 canvas1 = document.getElementsByTagName("canvas")
 
                 var canvas = document.getElementById('aecanvas');
@@ -163,18 +155,18 @@
                 var antDots = result['antdots']
                 var liGroupId = Object.keys(allGroupMap)
 
+                // Limit. Ensure the normal operation of the marchingant
                 MA_Start()
 
                 for(var i = 0; i < liGroupId.length; i ++){
                     if(i == liGroupId.length-1){
+                        //Same effect as MA_Start()
                         MA_End();
                     }
 
                     var groupId = liGroupId[i]
                     var tempGroup = allGroupMap[groupId]
-                    console.log("tempGroup",tempGroup)
                     var aeInfo = tempGroup["mainfo"]
-                    // console.log("aninfo", aeInfo)
                     var malist = tempGroup["malist"]
                     speed = aeInfo["antinterval"]
                     space = aeInfo["antgap"]
@@ -185,23 +177,6 @@
                     boundary = malist[0]["boundary"]["dots"]
 
                     console.log("boundary", boundary)
-                    // console.log("boundary0",boundary[0])
-
-                    var boundaryarray = []
-
-                    for(var j = 0; j < boundary.length; j++){
-                        var list = {'x': boundary[j][0], 'y': boundary[j][1]}
-                        boundaryarray.push(list)
-                    }
-
-
-                    var boundarypath = d3.select("svg")
-                                        .append("path")
-                                        .attr("stroke", "black")
-                                        // .attr("transform", "translate("+ boundaryarray[0]['x']+","+boundaryarray[0]['y']+")")
-                                        .attr("fill", "none")
-                                        .attr("d", lineFunction(boundaryarray))
-
                     marchingAnt(ant, path, boundary, speed, space, groupId, color, true)
                 }
             
@@ -209,33 +184,7 @@
         </script>
 
         <script>
-            // var dataset = [250] ;
-            // var rectHeight = 50 ;
-            // var svg = d3.select("svg")
-
-            // svg.selectAll("rect")
-            //         .data(dataset)
-            //         .enter()
-            //         .append("rect")
-            //    .attr("x", 50)
-            //    .attr("y", 50) 
-            //    .attr("width", 250)
-            //    .attr("height", 50)
-            //    .attr("fill","#ffffff")
-            //    .attr("stroke","steelblue") ;
-
-
-            // MA_Start()
-            // MA_End()
-            // var Path = [[50,75],[350,75]]
-            // //var Ant = [[52,52],[52,97],[82,77]]
-            // var Ant = [[50,50],[50,100],[75,75]]
-            // var Interval = 10 ;
-            // var Gap = 5;
-            // var Color = "red" ;
-            // var groupId = 2;
-            // var boundary = [[50,50], [300,50], [300,100], [50,100]]
-            // marchingAnt(Ant, Path, boundary, Interval, Gap, groupId, Color) 
+            //Call the API marchingant to handle the ant that the information is defined by ourself in this function
             boxplot()
         </script>
     </body>

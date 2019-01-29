@@ -1,5 +1,6 @@
 var loop = false; 
 
+
 GA_Loop = function(){
     loop = true;
 }
@@ -9,11 +10,13 @@ gradualAppearance = function(Visual_proxy, Offset, Repetition, Speed){
     var highlightcolor = "black"
     var index = 0
     var repetitionflag = 0
+    //Clone the firgure source 
     var proxy_clone = Visual_proxy.select(function(){
         return this.parentNode.insertBefore(this.cloneNode(1), this.nextSibling)
     })
         .style("fill", "none");
 
+    //Set a interval to ensure that the effects appear one at a time according to the hierarchy
     intervalhandler = setInterval(function(){
         proxy_clone
             .attr("class", "clonenode") 

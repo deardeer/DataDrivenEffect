@@ -12,16 +12,7 @@ geometryDeformation = function(Visual_proxy, Focal, Bandwidth, Speed, Context){
                   .radius(fistfisheyeradius)
                   .center(Focal)
 
-                function findYatX(x, linePath) {
-                     function getXY(len) {
-                          var point = linePath.getPointAtLength(len);
-                          return [point.x, point.y];
-                     }
-                     var curlen = 0;
-                     while (getXY(curlen)[0] < x) { curlen += 0.01; }
-                     return getXY(curlen);
-                }
-
+                // Judge the type of the diagram source and do the corresponding operations according to the different types
                 if(Visual_proxy[0][0].tagName == "rect"){
                     var rectgraph = svg.append("path")
                         .attr("class", "rectgraph")
@@ -33,6 +24,7 @@ geometryDeformation = function(Visual_proxy, Focal, Bandwidth, Speed, Context){
                     var height = parseInt(Visual_proxy.attr("height"))
                     var width =  parseInt(Visual_proxy.attr("width")); 
                     var liPoint = []
+                    // Interpolate four points of the rect
                     for(var i = 0; i < 8; i++){
                       liPoint.push({"x": (x + i / 8 * width), "y": y})
                     }
@@ -73,8 +65,11 @@ geometryDeformation = function(Visual_proxy, Focal, Bandwidth, Speed, Context){
                         }
                     })
                 }
+
+                //Set a interval to ensure that the effects appear one at a time according to the hierarchy
                 var interval = setInterval(function(){
                   
+                  //Change the radius of fisheye periodically
                   fisheye.radius( (fistfisheyeradius + Bandwidth) / steplist[index] )
 
                   if(Visual_proxy[0][0].tagName == "rect"){
