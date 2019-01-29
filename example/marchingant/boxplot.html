@@ -17,10 +17,10 @@
         <script src = "{{static_url('./src/js/boxplot.js')}}"></script>
         <script src = "{{static_url('./src/js/marchingants.js')}}"></script>
 
-        <canvas id = "aecanvas" width="800" height="800" display=" inline"></canvas>
+        <canvas id = "aecanvas" width="800" height="600" display=" inline"></canvas>
 
         <div>
-            <svg style="position: absolute; top: 0; left: 0" id="drawsvg"></svg>
+            <svg  id="drawsvg"></svg>
         </div>
 
         <script>
@@ -51,8 +51,11 @@
                         var top = (margin.top + (+box.attr('y')));
                         var middlepos = [ d3.select(this).node().getBoundingClientRect().left + (+mline.attr('x1') + width * 0.5),  (margin.top + (+mline.attr('y1')))];
 
+                        console.log("**************")
                         console.log(' boxplot ', d3.select(this).attr('groupid'));
-                        
+                        console.log("box", box)
+                        console.log("middlepos", middlepos)
+
                         //upper 
                         var upperma = {};
                         var upppermainfo = {};
@@ -117,6 +120,13 @@
             }
 
             boxplot = function(){
+
+                var lineFunction = d3.line()
+                  .x(function(d) { return d.x; })
+                  .y(function(d) { return d.y; })
+                  // .interpolate('linear');
+
+                console.log("DDDDDDDDD")
                 var point 
                 var imgWidth, imgHeight;
                 var largeScreenSizeSetting = {width: 1020, height: 720}
@@ -177,7 +187,21 @@
                     console.log("boundary", boundary)
                     // console.log("boundary0",boundary[0])
 
-                    
+                    var boundaryarray = []
+
+                    for(var j = 0; j < boundary.length; j++){
+                        var list = {'x': boundary[j][0], 'y': boundary[j][1]}
+                        boundaryarray.push(list)
+                    }
+
+
+                    var boundarypath = d3.select("svg")
+                                        .append("path")
+                                        .attr("stroke", "black")
+                                        // .attr("transform", "translate("+ boundaryarray[0]['x']+","+boundaryarray[0]['y']+")")
+                                        .attr("fill", "none")
+                                        .attr("d", lineFunction(boundaryarray))
+
                     marchingAnt(ant, path, boundary, speed, space, groupId, color, true)
                 }
             

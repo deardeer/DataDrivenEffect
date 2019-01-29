@@ -19,9 +19,9 @@ from handler.pointhandler import GDPathHandler
 
 url=[
 	(r'/', IndexHandler),
-    (r'/MAmindmap', MAMindmapHandler),
-    (r'/MAminard', MAMinardHandler),
-    (r'/MAfair', MAPlayfairHandler),
+    (r'/MAMindmap', MAMindmapHandler),
+    (r'/MAMinard', MAMinardHandler),
+    (r'/MAFair', MAPlayfairHandler),
     (r'/MABoxplot', MABoxplotHandler),
     (r'/GACirclepacking', GACirclepackingHandler),
     (r'/GATreemap', GATreemapHandler),
