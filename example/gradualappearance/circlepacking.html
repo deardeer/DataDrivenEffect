@@ -12,7 +12,7 @@
         <script src = "{{static_url('./src/js/ga.js')}}"></script>
 
         <script>
-        var maxdepth = -1
+            var maxdepth = -1
             var leaveDepthMap = {};
             var intervalStepNum = 1;
             var loopIndex = 0;
@@ -33,6 +33,7 @@
             d3.json("{{static_url('./data/flare.json')}}", function(error, root){
                 if(error) throw error
 
+                //Construct structure of hierarchy according to JSON file
                 root = d3.hierarchy(root)
                         .sum(function(d){ return d.size})
                         .sort(function(a,b){
@@ -62,6 +63,7 @@
                         .attr("r", function(d){ return d.r * k; })
                 }
 
+                //Append circle and add effects to each circles
                 var circleg = g.selectAll("circle")
                     .data(nodes)
                     .enter()

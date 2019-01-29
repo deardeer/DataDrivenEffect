@@ -20,7 +20,8 @@
         <script>
 
           function drawTreeMapLight(){
-            console.log(' draw tree map light ');
+
+            //data of rect
             var liRect = [
               {
                 level: 1,
@@ -350,6 +351,7 @@
             var liColor = ["#c7e9c0", "#a1d99b", "#74c476", "#41ab5d", "#238b45", "#006d2c"]
             var shadow_width = 2;
             
+            //Add effects to each rect
             d3.select('#coversvg').selectAll('.treecoverrect_new')
               .data(liRect)
               .enter()
@@ -372,11 +374,7 @@
               })
               .style('fill', function(d){
                 return liColor[d.level]
-              })
-              // .style('stroke', function(){
-              //   return "black"//"#a6d854"//'black'
-              // })
-              .style('stroke-width', '2px')
+              })              .style('stroke-width', '2px')
               .style('opacity', function(d){
                 return 0.2
               })
@@ -386,8 +384,6 @@
               .style('effect', function(d){
                   gradualAppearance(d3.select(this), d.level, 1, 1.2)
               })
-              // .style('stroke-width', shadow_width)
-              // .style('stroke-width', '2px')
              
 
             d3.select('#coversvg')
