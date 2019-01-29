@@ -58,7 +58,7 @@
             .attr("stroke-width", 2)
             .attr("fill", "none")
             .style("effect", function(){
-                geometryDeformation(d3.select(this), [51,24], 50, 0.3)
+                geometryDeformation(d3.select(this), [51,24], 50, 0.6)
             });
 
         var multigraph = svg.append("path")
@@ -69,7 +69,7 @@
             .attr("stroke-width", 2)
             .attr("fill", "none")
             .style("effect", function(){
-                geometryDeformation(d3.select(this), [40,70], 70, 0.3)
+                geometryDeformation(d3.select(this), [40,70], 70, 1.0)
             });
 
         var trianglegraph = svg.append("path")
